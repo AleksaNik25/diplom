@@ -1,0 +1,4 @@
+$(() => {
+
+    $('#contact-form').yiiActiveForm("add", {"id":"registerform-imagefiles","name":"imageFiles[]","container":".field-registerform-imagefiles","input":"#registerform-imagefiles","error":".invalid-feedback","validate":function (attribute, value, messages, deferred, $form) {yii.validation.file(attribute, messages, {"message":"Загрузка файла не удалась.","skipOnEmpty":false,"uploadRequired":"Загрузите файл.","mimeTypes":[],"wrongMimeType":"Разрешена загрузка файлов только со следующими MIME-типами: .","extensions":["png","jpg","avif","jpeg"],"wrongExtension":"Разрешена загрузка файлов только со следующими расширениями: png, jpg, avif, jpeg.","maxFiles":4,"tooMany":"Вы не можете загружать более 4 файлов."})}});
+})

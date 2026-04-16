@@ -1,0 +1,11 @@
+.cart-style {
+	max-width: 18rem;
+	min-width: 18rem;
+	display: flex;
+	justify-content: center;
+}
+
+.img-cart-style {
+	display: flex;
+	justify-content: center;
+}
