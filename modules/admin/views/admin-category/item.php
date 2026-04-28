@@ -21,5 +21,10 @@ use yii\helpers\VarDumper;
                 'method' => 'post',
             ],
         ]) ?>
+
+        <!-- <?php # $model->status->alias !== 'confirmed' && $model->status->alias == 'check'
+            # ?  Html::a('Опубликовать', ['change-status', 'id' => $model->id, 'status' => 'confirmed'], ['class' => 'btn btn-outline-success'])
+            # : ''
+        # ?> -->
     </div>
 </div>

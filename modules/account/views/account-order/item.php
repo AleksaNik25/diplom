@@ -34,12 +34,9 @@ Yii::debug($firstImage);
 			<h5 class="ml-3"><?= Html::a($model->product->title, ["/catalog/view", "id" => $model->product->id]) ?></h5>
 		</div>
 		<div class="d-flex gap-3">
-			<div><?= Html::a('-', ['dec', 'item_id' => $model->id], ['class' => 'text-decoration-none basket-btn', 'data-pjax' => 0]) ?></div>
 			<div><?= $model->amount ?></div>
-			<div><?= Html::a('+', ['add', 'product_id' => $model->product_id], ['class' => 'text-decoration-none  basket-btn', 'data-pjax' => 0]) ?></div>
 			<div><?= $model->price ?></div>
 			<div><?= $model->sum ?></div>
-			<div><?= Html::a('🗑', ['delete', 'item_id' => $model->id], ['data-pjax' => 0, 'class' => 'text-decoration-none  basket-btn', 'data-method' => 'post']) ?></div>
 		</div>
 
 	</div>

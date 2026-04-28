@@ -2,33 +2,18 @@
 
 /** @var yii\web\View $this */
 
+use yii\bootstrap5\Html;
+
 $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
 
-    <section id="preveiw">
-        <div>
-            <div>
-                <span class="title">Твоя домашняя экосистема</span>
-                <span class="preveiw">Некоторый текст, о том какой это крутой и очень важный и нужный маркетплейс, по продаже растений и всяческих прилуд для уходо за ними</span>
-            </div>
-            <div>
-                <button type="button" class="btn btn-success">Каталог</button>
-                <button type="button" class="btn btn-outline-success">вторая кнопка</button>
-            </div>
-        </div>
-
-        <div>
-            <img src="" alt="">
-        </div>
-    </section>
-
     <div class="jumbotron text-center bg-transparent mt-5 mb-5">
-        <h1 class="display-4">Congratulations!</h1>
+        <h1 class="display-4">Создай природу вокруг</h1>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+        <p class="lead">Некоторый текст, о том какой это крутой и очень важный и нужный маркетплейс, <br> по продаже растений и всяческих приблуд для уходо за ними</p>
 
-        <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
+        <p><?= Html::a('Наши товары', ['/catalog'], ['class' => 'btn btn-success']) ?></p>
     </div>
 
     <div class="body-content d-flex justify-content-center">
@@ -68,7 +53,3 @@ $this->title = 'My Yii Application';
 
     </div>
 </div>
-
-
-
-

@@ -24,6 +24,19 @@ $basketNoEmpty = $basket && $dataProviderItems->totalCount;
         'enablePushState' => false,
         'timeout' => 5000,
     ]); ?>
+
+    <div class="d-flex justify-content-between mt-3 mb-3">
+        <div>
+            <?= Html::a('Продолжить покупки', ['/catalog'], ['class' => 'btn btn-outline-info', 'data-pjax' => 0]) ?>
+        </div>
+        <div>
+            <?= $basketNoEmpty
+                ? Html::a('Очистить корзину', ['clear', 'id' => $basket->id], ['class' => 'btn btn-outline-danger cart-btn'])
+                : ""
+            ?>
+        </div>
+    </div>
+
     <?php if ($dataProviderItems->totalCount): ?>
         <?= ListView::widget([
             'dataProvider' => $dataProviderItems,
@@ -40,18 +53,11 @@ $basketNoEmpty = $basket && $dataProviderItems->totalCount;
         </div>
     <?php endif ?>
 
-    <div class="d-flex justify-content-between mt-3">
-        <div class="d-flex gap-3">
-            <?= Html::a('Продолжить покупки', ['/catalog'], ['class' => 'btn btn-outline-info', 'data-pjax' => 0]) ?>
-        </div>
-        <div>
-            <?= $basketNoEmpty
-                ? Html::a('Очистить корзину', ['clear', 'id' => $basket->id], ['class' => 'btn btn-outline-danger cart-btn'])
-                : ""
-            ?>
-        </div>
-        
-
-        <?php Pjax::end(); ?>
-
+    <div class="d-flex justify-content-end mt-3">
+        <?= $basketNoEmpty
+            ? Html::a('Оформить заказ', ['/account/account-order/create', 'basket_id' => $basket->id], ['class' => 'btn btn-success'])
+            : ""
+        ?>
     </div>
+
+    <?php Pjax::end(); ?>

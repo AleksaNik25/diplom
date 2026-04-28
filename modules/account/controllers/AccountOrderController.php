@@ -1,20 +1,23 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\account\controllers;
 
-use app\models\Product;
-use app\models\CatalogSearch;
-use app\models\Status;
+use app\models\Basket;
+use app\models\BasketItem;
+use app\models\Order;
+use app\models\OrderItem;
+use app\modules\account\models\AccountOrderSearch;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 
 /**
- * CatalogController implements the CRUD actions for Product model.
+ * AccountOrderController implements the CRUD actions for Order model.
  */
-class CatalogController extends Controller
+class AccountOrderController extends Controller
 {
     /**
      * @inheritDoc
@@ -35,30 +38,15 @@ class CatalogController extends Controller
     }
 
     /**
-     * Lists all Product models.
+     * Lists all Order models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new CatalogSearch();
+        $searchModel = new AccountOrderSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => Product::find()->where(['status_id' => Status::getStatusId('on sale')]),
-
-            'pagination' => [
-                'pageSize' => 24
-            ],
-            /*
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
-        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -66,44 +54,56 @@ class CatalogController extends Controller
     }
 
     /**
-     * Displays a single Product model.
-     * @param int $id №
+     * Displays a single Order model.
+     * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+        $dataProviderItems = new ActiveDataProvider([
+            'query' => OrderItem::find()
+                ->where(["order_id" => $id]),
+        ]);
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'dataProviderItems' => $dataProviderItems,
         ]);
     }
 
     /**
-     * Creates a new Product model.
+     * Creates a new Order model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($basket_id)
     {
-        $model = new Product();
+        $basket = Basket::findOne($basket_id);
+
+        $dataProviderItems = new ActiveDataProvider([
+            'query' => BasketItem::find()
+                ->where("basket_item.basket_id = $basket_id"),
+        ]);
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
+            if ($order = Order::createOrder($basket_id)) {
+                return $this->redirect(['view', 'id' => $order]);
+            } else {
+            Yii::debug($order);
+        }
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'basket' => $basket,
+            'dataProviderItems' => $dataProviderItems,
         ]);
     }
 
     /**
-     * Updates an existing Product model.
+     * Updates an existing Order model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id №
+     * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -121,9 +121,9 @@ class CatalogController extends Controller
     }
 
     /**
-     * Deletes an existing Product model.
+     * Deletes an existing Order model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id №
+     * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -135,15 +135,15 @@ class CatalogController extends Controller
     }
 
     /**
-     * Finds the Product model based on its primary key value.
+     * Finds the Order model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id №
-     * @return Product the loaded model
+     * @param int $id ID
+     * @return Order the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Product::findOne(['id' => $id])) !== null) {
+        if (($model = Order::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

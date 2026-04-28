@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Exception;
 use Yii;
 
 /**
@@ -49,12 +50,12 @@ class Order extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => 'Номер заказа',
             'user_id' => 'User ID',
             'created_at' => 'Created At',
             'amount' => 'Amount',
             'sum' => 'Sum',
-            'status_id' => 'Status ID',
+            'status_id' => 'Статус заказа',
         ];
     }
 
@@ -86,5 +87,36 @@ class Order extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    public static function createOrder(int $basket_id): bool | int
+    {
+        $basket = Basket::findOne($basket_id);
+        try {
+            $order = new static();
+            $order->user_id = Yii::$app->user->id;
+            $order->amount = $basket->amount;
+            $order->sum = $basket->sum;
+            $order->status_id = Status::getStatusId('new');
+            if ($order->save()) {
+                if ($basketItems = BasketItem::find()->where(['basket_id' => $basket_id])->all()) {
+
+                    foreach ($basketItems as $item) {
+                        $orderItem = new OrderItem();
+                        $orderItem->order_id = $order->id;
+                        $orderItem->load($item->attributes, '');
+                        $orderItem->save();
+                    }
+                    $basket->delete();
+                    return $order->id;
+                }
+            }
+        } catch (Exception $e) {
+            if (isset($order) && $order->id) {
+                $order->delete();
+            }
+            Yii::debug($e->getMessage());
+        }
+        return false;
     }
 }

@@ -14,11 +14,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <p>
-        <?= Html::a('История заказов', ['/seller/seller-product'], ['class' => 'btn btn-outline-success']) ?>
+        <?= Html::a('Мои заказы', ['/account/account-order'], ['class' => 'btn btn-outline-success']) ?>
     </p>
 
     <p>
-        <?= Html::a('Мои отзывы', ['/seller/seller-company'], ['class' => 'btn btn-outline-primary']) ?>
+        <?= Html::a('Мои отзывы', ['/account'], ['class' => 'btn btn-outline-primary']) ?>
     </p>
 
 </div>

@@ -46,12 +46,13 @@ $viewUrl = Url::to(['view', 'id' => $model->id]);
             </div>
         </div>
     </div>
-    
+
     <div class="m-2">
-        <!-- добавить что доступна толко пользователю -->
-        <?= Html::a('В корзину', ['/account/account-basket/add', 'product_id' => $model->id], [
-        'class' => "btn btn-outline-primary w-100 $disabled",
-        'data-pjax' => 0
-    ]) ?>
+        <?php if (Yii::$app->user->identity?->isClient): ?>
+            <?= Html::a('В корзину', ['/account/account-basket/add', 'product_id' => $model->id], [
+                'class' => "btn btn-outline-primary w-100 $disabled",
+                'data-pjax' => 0
+            ]) ?>
+        <?php endif ?>
     </div>
 </div>

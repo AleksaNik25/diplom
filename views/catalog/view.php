@@ -25,6 +25,8 @@ $this->params['breadcrumbs'][] = $this->title;
     $images = array_map(function ($item) use ($model) {
         return "<img src=\"/img/$item->photo\" alt=\"$model->title\" style=\"max-width: 30rem;  min-height: 450px; max-height: 450px;\" class=\"img-cart-style\">";
     }, $model->productImages);
+
+    $disabled = Yii::$app->user->isGuest ? 'disabled' : '';
     // VarDumper::dump($images, 10, true);
     ?>
 
@@ -44,31 +46,42 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
 
-        <?= DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-                [
-                    'attribute' => 'title',
-                    'value' => $model->title,
-                ],
-                [
-                    'attribute' => 'preview',
-                    'value' => $model->preview,
-                ],
-                [
-                    'attribute' => 'category_id',
-                    'value' => $model->category->title,
-                ],
-                [
-                    'attribute' => 'price',
-                    'value' => $model->price,
-                ],
-                [
-                    'attribute' => 'care_recommendations',
-                    'value' => $model->care_recommendations,
-                ],
+        <div>
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    [
+                        'attribute' => 'title',
+                        'value' => $model->title,
+                    ],
+                    [
+                        'attribute' => 'preview',
+                        'value' => $model->preview,
+                    ],
+                    [
+                        'attribute' => 'category_id',
+                        'value' => $model->category->title,
+                    ],
+                    [
+                        'attribute' => 'price',
+                        'value' => $model->price,
+                    ],
+                    [
+                        'attribute' => 'care_recommendations',
+                        'value' => $model->care_recommendations,
+                    ],
 
-            ],
-        ]) ?>
+                ],
+            ]) ?>
+
+            <div class="d-flex justify-content-end">
+                <?php if (Yii::$app->user->identity?->isClient): ?>
+                    <?= Html::a('В корзину', ['/account/account-basket/add', 'product_id' => $model->id], [
+                        'class' => "btn btn-outline-primary $disabled",
+                        'data-pjax' => 0
+                    ]) ?>
+                <?php endif ?>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,15 +1,15 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\account\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Product;
+use app\models\Order;
 
 /**
- * CatalogSearch represents the model behind the search form of `app\models\Product`.
+ * AccountOrderSearch represents the model behind the search form of `app\models\Order`.
  */
-class CatalogSearch extends Product
+class AccountOrderSearch extends Order
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,9 @@ class CatalogSearch extends Product
     public function rules()
     {
         return [
-            [['id', 'user_id', 'category_id', 'status_id'], 'integer'],
-            [['title', 'preview', 'care_recommendations', 'price'], 'safe'],
+            [['id', 'user_id', 'amount', 'status_id'], 'integer'],
+            [['created_at'], 'safe'],
+            [['sum'], 'number'],
         ];
     }
 
@@ -40,7 +41,7 @@ class CatalogSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find();
+        $query = Order::find();
 
         // add conditions that should always apply here
 
@@ -60,14 +61,11 @@ class CatalogSearch extends Product
         $query->andFilterWhere([
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'category_id' => $this->category_id,
+            'created_at' => $this->created_at,
+            'amount' => $this->amount,
+            'sum' => $this->sum,
             'status_id' => $this->status_id,
         ]);
-
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'preview', $this->preview])
-            ->andFilterWhere(['like', 'care_recommendations', $this->care_recommendations])
-            ->andFilterWhere(['like', 'price', $this->price]);
 
         return $dataProvider;
     }
