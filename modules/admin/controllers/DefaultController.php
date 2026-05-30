@@ -6,6 +6,7 @@ use yii\web\Controller;
 use app\models\Product;
 use app\models\ProductSearch;
 use app\models\Status;
+use app\modules\admin\models\AdminOrderSearch;
 use app\modules\admin\models\AdminProductSearch;
 use Yii;
 
@@ -58,7 +59,7 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new AdminProductSearch();
+        $searchModel = new AdminOrderSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [

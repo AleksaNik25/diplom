@@ -9,7 +9,6 @@ use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
 $this->title = 'Вход';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="container d-flex justify-content-center">
@@ -34,8 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
                 <!-- <?= $form->field($model, 'rememberMe')->checkbox([
-                    'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-                ]) ?> -->
+                            'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+                        ]) ?> -->
 
                 <div class="form-group pt-2 text-center">
                     <div>
@@ -46,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php ActiveForm::end(); ?>
 
                 <div style="color:#999;">
-                    <strong>admin/admin</strong> or <strong>ivan/ivan</strong> or <strong>q/q</strong>.<br>
+                    Админ: <strong>admin/admin</strong> <br> Пользователь: <strong>ivan/ivan</strong> или <strong>alex/alex</strong> <br> Продавец: <strong>q/q</strong> или <strong>a/a</strong>
                 </div>
 
             </div>

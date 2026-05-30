@@ -1,5 +1,278 @@
+@font-face {
+    font-family: 'Nunito';
+    src: url('/web/fonts/Nunito-Regular.ttf');
+}
+
+* {
+    font-family: 'Nunito';
+}
+
+body {
+    min-height: 100vh;
+    background-image: linear-gradient(#ECF0BA, rgb(255, 255, 255), rgb(255, 255, 255));
+    background-attachment: fixed;
+}
+
+a {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    color: rgba(32, 32, 32, 0.7);
+}
+
+a:hover {
+    color: rgb(0, 0, 0);
+}
+
 .register-login-style {
     width: 600px;
     border-radius: 20px;
-    background-color: rgb(221, 255, 215);
+    background-color: #ECF0BA;
+}
+
+.block-icon i.icon-favourite {
+    cursor: pointer;
+}
+
+/* 
+#1A3306
+#3A7F0C
+#77A41C
+#ECF0BA
+ */
+
+:root {
+    --bs-success: #77A41C;
+    --bs-primary: #1A3306;
+    --bs-danger: rgb(142, 46, 46);
+}
+
+.btn-primary {
+    /* БАЗОВОЕ СОСТОЯНИЕ */
+    --bs-btn-color: #ffffff;
+    --bs-btn-bg: #2e570a;
+    --bs-btn-border-color: #2e570a;
+    border: 2px solid var(--bs-btn-border-color);
+
+    /* ПРИ НАВЕДЕНИИ */
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: #1A3306;
+    --bs-btn-hover-border-color: #1A3306;
+
+    /* ПРИ ЗАЖАТИИ (ACTIVE) */
+    --bs-btn-active-color: #000000;
+    --bs-btn-active-bg: transparent;
+    --bs-btn-active-border-color: #2e570a;
+
+    /* ФОКУС И ОТКЛЮЧЕННОЕ СОСТОЯНИЕ */
+    --bs-btn-focus-shadow-rgb: 26, 51, 6;
+    --bs-btn-disabled-color: #ffffff;
+    --bs-btn-disabled-bg: #1A3306;
+    --bs-btn-disabled-border-color: #2e570a;
+}
+
+.btn-primary:focus-visible {
+    outline: 2px solid #2e570a;
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+
+.btn-outline-primary {
+    background-color: transparent;
+    border: 2px solid #2e570a;
+    color: #2e570a;
+
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: #2e570a;
+    --bs-btn-active-border-color: #2e570a;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: #2e570a;
+    border: 2px solid #2e570a;
+    color: #ffffff;
+}
+
+.btn-outline-primary:focus-visible {
+    outline: 2px solid #2e570a;
+    outline-offset: 2px;
+}
+
+
+.btn-success {
+    /* БАЗОВОЕ СОСТОЯНИЕ */
+    --bs-btn-color: #ffffff;
+    --bs-btn-bg: #77A41C;
+    --bs-btn-border-color: #77A41C;
+    border: 2px solid var(--bs-btn-border-color);
+
+    /* ПРИ НАВЕДЕНИИ */
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: #628717;
+    --bs-btn-hover-border-color: #628717;
+
+    /* ПРИ ЗАЖАТИИ (ACTIVE) */
+    --bs-btn-active-color: #000000;
+    --bs-btn-active-bg: transparent;
+    --bs-btn-active-border-color: #77A41C;
+
+    /* ФОКУС И ОТКЛЮЧЕННОЕ СОСТОЯНИЕ */
+    --bs-btn-focus-shadow-rgb: 26, 51, 6;
+    --bs-btn-disabled-color: #ffffff;
+    --bs-btn-disabled-bg: #628717;
+    --bs-btn-disabled-border-color: #77A41C;
+}
+
+.btn-success:focus-visible {
+    outline: 2px solid #77A41C;
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+
+.btn-outline-success {
+    background-color: transparent;
+    border: 2px solid #77A41C;
+    color: #77A41C;
+
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: #77A41C;
+    --bs-btn-active-border-color: #77A41C;
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus,
+.btn-outline-success:active {
+    background-color: #77A41C;
+    border: 2px solid #77A41C;
+    color: #ffffff;
+}
+
+.btn-outline-success:focus-visible {
+    outline: 2px solid #77A41C;
+    outline-offset: 2px;
+}
+
+
+.text-success {
+    color: #77A41C !important;
+}
+
+
+.btn-danger {
+    /* БАЗОВОЕ СОСТОЯНИЕ */
+    --bs-btn-color: #ffffff;
+    --bs-btn-bg: rgb(142, 46, 46);
+    --bs-btn-border-color: rgb(142, 46, 46);
+    border: 2px solid var(--bs-btn-border-color);
+
+    /* ПРИ НАВЕДЕНИИ */
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: rgb(110, 36, 36);
+    --bs-btn-hover-border-color: rgb(110, 36, 36);
+
+    /* ПРИ ЗАЖАТИИ (ACTIVE) */
+    --bs-btn-active-color: #000000;
+    --bs-btn-active-bg: transparent;
+    --bs-btn-active-border-color: rgb(142, 46, 46);
+
+    /* ФОКУС И ОТКЛЮЧЕННОЕ СОСТОЯНИЕ */
+    --bs-btn-focus-shadow-rgb: 26, 51, 6;
+    --bs-btn-disabled-color: #ffffff;
+    --bs-btn-disabled-bg: rgb(110, 36, 36);
+    --bs-btn-disabled-border-color: rgb(142, 46, 46);
+}
+
+.btn-danger:focus-visible {
+    outline: 2px solid rgb(142, 46, 46);
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+
+.btn-outline-danger {
+    background-color: transparent;
+    border: 2px solid rgb(142, 46, 46);
+    color: rgb(142, 46, 46);
+
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: rgb(142, 46, 46);
+    --bs-btn-active-border-color: rgb(142, 46, 46);
+}
+
+.btn-outline-danger:hover,
+.btn-outline-danger:focus,
+.btn-outline-danger:active {
+    background-color: #rgb(142, 46, 46);
+    border: 2px solid rgb(142, 46, 46);
+    color: #ffffff;
+}
+
+.btn-outline-danger:focus-visible {
+    outline: 2px solid rgb(142, 46, 46);
+    outline-offset: 2px;
+}
+
+
+.alert-primary {
+    --bs-alert-bg: color-mix(in srgb, #1a3306 15%, white);
+    --bs-alert-border-color: color-mix(in srgb, #1a3306 35%, white);
+    --bs-alert-color: #1a3306;
+    --bs-alert-link-color: #0d2203;
+}
+
+.alert-success {
+    --bs-alert-bg: color-mix(in srgb, #3A7F0C 15%, white);
+    --bs-alert-border-color: color-mix(in srgb, #3A7F0C 35%, white);
+    --bs-alert-color: #3A7F0C;
+    --bs-alert-link-color: #224c06;
+}
+
+
+.pagination {
+    /* Базовое состояние */
+    --bs-pagination-color: #77A41C;
+    --bs-pagination-bg: transparent;
+    --bs-pagination-border-color: #77A41C;
+
+    /* При наведении */
+    --bs-pagination-hover-color: #373737;
+    --bs-pagination-hover-bg: transparent;
+    --bs-pagination-hover-border-color: #77A41C;
+
+    /* При фокусе (Tab/доступность) */
+    --bs-pagination-focus-color: rgba(32, 32, 32, 0.7);
+    --bs-pagination-focus-bg: transparent;
+    --bs-pagination-focus-border-color: #77A41C;
+    --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(119, 164, 28, 0.25);
+
+    /* Активная страница */
+    --bs-pagination-active-color: #ffffff;
+    --bs-pagination-active-bg: #77A41C;
+    --bs-pagination-active-border-color: #77A41C;
+
+    /* Отключённые элементы (<<, >> на первой/последней странице) */
+    --bs-pagination-disabled-color: #6c757d;
+    --bs-pagination-disabled-bg: transparent;
+    --bs-pagination-disabled-border-color: #dee2e6;
+}
+
+
+.heder-cart-bg {
+    background-color: #3A7F0C;
+}
+
+.text-light {
+    color: white !important;
+}
+
+.box-bg {
+    background-color: white !important;
+}
+
+.block-subcategory,
+.item-subcategory {
+    border-radius: 0.375rem !important;
 }

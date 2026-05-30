@@ -6,6 +6,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Company;
 use app\models\CompanyInfo;
+use app\models\UserLE;
 use Yii;
 use yii\helpers\VarDumper;
 
@@ -18,6 +19,7 @@ class SellerCompanySearch extends Company
      * {@inheritdoc}
      */
     public $title;
+    public $person;
     public $inn;
     public $address;
     public $email;
@@ -26,7 +28,7 @@ class SellerCompanySearch extends Company
     {
         return [
             [['id', 'user_LE_id', 'approval'], 'integer'],
-            [['title', 'inn', 'address', 'email'], 'string'],
+            [['title', 'person', 'inn', 'address', 'email'], 'string'],
         ];
     }
 
@@ -36,6 +38,7 @@ class SellerCompanySearch extends Company
             ...parent::attributeLabels(),
             'company_id' => 'Company ID',
             'title' => 'Наименование организации',
+            'person' => 'Контактное лицо',
             'inn' => 'ИНН',
             'address' => 'Юридический адрес',
             'email' => 'Адрес электронной почты',
@@ -58,49 +61,35 @@ class SellerCompanySearch extends Company
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $formName = null)
     {
-        $query = Company::find();
-
-        // add conditions that should always apply here
+        $query = Company::find()
+            ->where(['company.user_LE_id' => UserLE::geIdtUserLE()])
+            ->joinWith('companyInfo');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $this->load($params);
+        $this->load($params, $formName);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
+        // фильтры по таблице company
         $query->andFilterWhere([
-            'id' => $this->id,
-            'user_LE_id' => $this->user_LE_id,
-            'approval' => $this->approval,
+            'company.id' => $this->id,
+            'company.user_LE_id' => $this->user_LE_id,
+            'company.approval' => $this->approval,
         ]);
 
-        if ($this->title || $this->inn || $this->address || $this->email) {
-
-            $q = CompanyInfo::find()
-                ->select('company_id')
-                ->andFilterWhere(['like', 'title', $this->title])
-                ->andFilterWhere(['like', 'inn', $this->inn])
-                ->andFilterWhere(['like', 'address', $this->address])
-                ->andFilterWhere(['like', 'email', $this->email]);
-
-            // VarDumper::dump($q->createCommand()->rawSql, 10, true);
-            // VarDumper::dump($q->column(), 10, true);
-
-            $query->andWhere(['id' => $q->column()]);
-
-        }
-        // Yii::debug();
-        // VarDumper::dump($query->createCommand()->rawSql, 10, true);
-        // die;
+        // фильтры по таблице company_info
+        $query->andFilterWhere(['like', 'company_info.title', $this->title])
+            ->andFilterWhere(['like', 'company_info.person', $this->person])
+            ->andFilterWhere(['like', 'company_info.inn', $this->inn])
+            ->andFilterWhere(['like', 'company_info.address', $this->address])
+            ->andFilterWhere(['like', 'company_info.email', $this->email]);
 
         return $dataProvider;
     }

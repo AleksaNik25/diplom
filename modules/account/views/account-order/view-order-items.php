@@ -2,14 +2,22 @@
 
 use yii\widgets\ListView;
 ?>
-<div class="mt-5 mb-2 row justify-content-between border-bottom px-3">
-    <div class="col-9">Наименование товара</div>
-    <div class="col-3 d-flex gap-5">
-        <div>кол-во</div>
-        <div>цена</div>
-        <div>сумма</div>
+<div class="border-white border-bottom border-2 py-3 order-total fw-bold fs-3">
+    <div class="row align-items-start">
+        <div class="col-1 offset-1">
+            Итого:
+        </div>
+
+        <div class="col-2 text-center">
+            <?= $order->amount ?> шт.
+        </div>
+
+        <div class="col-2 offset-5 text-end">
+            <?= Yii::$app->formatter->asDecimal($order->sum, 2) ?> ₽
+        </div>
     </div>
 </div>
+
 <?= ListView::widget(
     [
         'dataProvider' => $dataProviderItems,

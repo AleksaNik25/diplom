@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p class="mt-3">
-        <?= Html::a('Назад', ['default/index'], ['class' => 'btn btn-outline-primary']) ?>
+        <?= Html::a('<i class="fas fa-arrow-left"></i>', ['admin-order/index'], ['class' => 'btn btn-outline-primary']) ?>
     </p>
 
     <?php Pjax::begin(); ?>

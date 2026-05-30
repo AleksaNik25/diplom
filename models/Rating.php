@@ -70,4 +70,29 @@ class Rating extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
+    
+    // обновление кэша среднего значение оценки в продукте, которое обновляется при добавлении оценки
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        $this->updateProductEstimation();
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        $this->updateProductEstimation();
+    }
+
+    private function updateProductEstimation()
+    {
+        $avg = (float) Rating::find()
+            ->where(['product_id' => $this->product_id])
+            ->average('estimation');
+
+        Product::updateAll(
+            ['estimation' => $avg],
+            ['id' => $this->product_id]
+        );
+    }
 }

@@ -1,0 +1,153 @@
+/* === Основной контейнер карточки === */
+.order-card {
+  background-color: rgb(255, 255, 255);
+  /* фон карточки */
+  color: #151515;
+  /* общий цвет текста */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  font-family: sans-serif;
+}
+
+/* === Заголовок карточки === */
+.order-card-header {
+  background-color: rgb(0, 0, 0);
+  /* оранжевый заголовок */
+  color: #000000;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 1rem;
+  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+}
+
+/* === Основное содержимое карточки === */
+.order-card-body {
+  padding: 0;
+}
+
+/* === Строка с товаром === */
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* === Фото товара === */
+.order-img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* === Название товара === */
+.order-title {
+  font-size: 1.7rem !important;
+  color: #77A41C !important;
+}
+
+/* === Объем товара === */
+.order-volume {
+  font-size: 0.9rem;
+  color: #2b2b2b;
+}
+
+/* === Цена товара === */
+.order-item-price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #151515;
+  /* оранжевый */
+  white-space: nowrap;
+}
+
+/* === Блок итого === */
+.order-summary {
+  font-size: 1rem;
+  color: #151515;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+/* === Итоговая сумма === */
+.order-total {
+  color: #77A41C;
+  font-size: 1.5rem;
+}
+
+.order-item-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-title {
+  font-size: 1.2rem;
+  color: #000000;
+  text-align: center;
+}
+
+.order-volume {
+  font-size: 0.95rem;
+  color: #2b2b2b;
+  text-align: center;
+}
+
+.order-status {
+  padding: 3px 10px;
+  border-radius: 7px;
+  margin-right: 10px;
+}
+
+.order-new {
+  background-color: rgb(227, 253, 255);
+}
+
+.order-canceled {
+  background-color: rgb(255, 225, 225);
+}
+
+.order-in-delivery {
+  background-color: rgb(255, 248, 210);
+}
+
+.order-finished {
+  background-color: #ebffc2;
+}
+
+/* .order-item-title {
+  color: #aaa;
+} */
+.order-form {
+  width: 1100px;
+  background-color: #ffffff;
+  padding: 20px;
+  margin: 0 auto;
+  border-radius: 5px;
+}
+
+.order-itog {
+  width: 1100px;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.order-itog-btn {
+  width: 1100px;
+}
+
+.border-top,
+.border-bottom {
+  border-color: #77A41C !important;
+  border-width: 2px !important;
+}
+
+.basket-btn {
+  padding: 3px;
+  border-radius: 150px;
+}

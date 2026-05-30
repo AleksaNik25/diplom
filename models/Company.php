@@ -17,6 +17,8 @@ use Yii;
  */
 class Company extends \yii\db\ActiveRecord
 {
+    public $docFiles;
+
     /**
      * {@inheritdoc}
      */
@@ -34,6 +36,7 @@ class Company extends \yii\db\ActiveRecord
             [['user_LE_id'], 'required'],
             [['user_LE_id', 'approval'], 'integer'],
             [['user_LE_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserLE::class, 'targetAttribute' => ['user_LE_id' => 'id']],
+            [['docFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, pdf', 'maxFiles' => 10],
         ];
     }
 
@@ -77,5 +80,38 @@ class Company extends \yii\db\ActiveRecord
     public function getUserLE()
     {
         return $this->hasOne(UserLE::class, ['id' => 'user_LE_id']);
+    }
+
+    /**
+     * Проверяет, подтверждена ли компания продавца (текущего пользователя)
+     */
+    public static function isCurrentSellerApproved(): bool
+    {
+        $userLeId = UserLE::geIdtUserLE();
+        if (!$userLeId) {
+            return false;
+        }
+        return self::find()
+            ->where(['user_LE_id' => $userLeId, 'approval' => 1])
+            ->exists();
+    }
+
+    public function uploadDocs()
+    {
+        if (empty($this->docFiles)) {
+            return true;
+        }
+
+        foreach ($this->docFiles as $file) {
+            $fileName = time() . '_' . Yii::$app->security->generateRandomString() . '.' . $file->extension;
+            $file->saveAs('@app/web/company_docs/' . $fileName);
+            $doc = new CompanyDoc();
+            $doc->company_id = $this->id;
+            $doc->photo = $fileName;
+            if (!$doc->save()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

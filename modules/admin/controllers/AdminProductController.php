@@ -2,7 +2,10 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Comment;
+use app\models\Company;
 use app\models\Product;
+use app\models\Rating;
 use app\models\Status;
 use app\modules\admin\models\AdminProductSearch;
 use Yii;
@@ -74,8 +77,43 @@ class AdminProductController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Comment::find()
+                ->where(['product_id' => $model->id, 'parent_id' => null])
+                ->with(['replies.user', 'replies.replies.user', 'replies.replies.replies.user', 'user'])
+                ->orderBy(['created_at' => SORT_DESC]),
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC
+                ]
+            ],
+            'pagination' => [
+                'pageSize' => 5
+            ],
+        ]);
+
+        $stars = Rating::find()
+            ->where(['user_id' => Yii::$app->user->id, 'product_id' => $id])
+            ->select('estimation')
+            ->scalar();
+
+        // VarDumper::dump($this->stars, 10, true); die;
+
+        $stars = $stars ? (float)$stars : 0;
+
+        $productModel = $this->findModel($id);
+        $productModel->user_stars = $stars;
+
+        $commentModel = new Comment();
+        $commentModel->product_id = $id;
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $productModel,
+            'dataProvider' => $dataProvider,
+            'model_comment' => $commentModel,
+            'stars' => $stars,
         ]);
     }
 
@@ -86,6 +124,12 @@ class AdminProductController extends Controller
      */
     public function actionCreate()
     {
+        // Проверка: подтверждена ли компания продавца
+        if (!Company::isCurrentSellerApproved()) {
+            Yii::$app->session->setFlash('error', 'Добавление товаров недоступно. Ваша компания ещё не подтверждена администратором.');
+            return $this->redirect(['index']);
+        }
+        
         $model = new Product();
 
         if ($this->request->isPost) {

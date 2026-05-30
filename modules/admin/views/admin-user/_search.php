@@ -1,7 +1,7 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\Html;
+use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\UserSearch $model */
@@ -14,23 +14,25 @@ use yii\widgets\ActiveForm;
         'action' => ['index'],
         'method' => 'get',
         'options' => [
-            'data-pjax' => 1
+            'data-pjax' => 1,
+            'class' => 'd-flex align-items-end gap-3',
+            'id' => 'form-search'
         ],
     ]); ?>
-
-    <?= $form->field($model, 'id') ?>
 
     <?= $form->field($model, 'login') ?>
 
     <?= $form->field($model, 'email') ?>
 
-    <?php // echo $form->field($model, 'phone') ?>
+    <?php // echo $form->field($model, 'phone') 
+    ?>
 
-    <?php // echo $form->field($model, 'role') ?>
+    <?php // echo $form->field($model, 'role') 
+    ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Найти', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Сбросить', 'index', ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('<i class="fas fa-redo-alt"></i>', 'index', ['class' => 'btn btn-outline-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -18,15 +18,20 @@ class RegisterForm extends Model
     public $login;
     public $password;
 
+    public $passwordRepeat;
+
     /**
      * @return array the validation rules.
      */
     public function rules()
     {
         return [
-            [['surname', 'name', 'patronymic', 'login', 'password', 'email', 'phone'], 'required'],
+            [['surname', 'name', 'login', 'password', 'email', 'phone'], 'required'],
             [['surname', 'name', 'patronymic', 'login', 'password', 'email', 'phone'], 'string', 'max' => 255],
+            [['email'], 'email'],
             [['login'], 'unique', 'targetClass' => User::class],
+            [['passwordRepeat'], 'required'],
+            [['passwordRepeat'], 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
         ];
     }
 
@@ -38,9 +43,10 @@ class RegisterForm extends Model
         return [
             'surname' => 'Фамилия',
             'name' => 'Имя',
-            'patronymic' => 'Отчество',
+            'patronymic' => 'Отчество (при наличии)',
             'login' => 'Логин',
             'password' => 'Пароль',
+            'passwordRepeat' => 'Повтор пароля',
             'email' => 'Почтовый адрес',
             'phone' => 'Номер телефона',
         ];

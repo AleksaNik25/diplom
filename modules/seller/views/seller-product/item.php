@@ -30,7 +30,7 @@ $viewUrl = Url::to(['view', 'id' => $model->id]);
         </div>
     </a>
 
-    <div class="card-body">
+    <div class="card-body text-center">
         <div>
             <h5 class="card-title fw-bold">
                 <a href="<?= $viewUrl ?>" class="text-decoration-none text-dark">
@@ -38,7 +38,16 @@ $viewUrl = Url::to(['view', 'id' => $model->id]);
                 </a>
             </h5>
             <div>
-                <span class="card-text"><?= $model->category->title ?></span>
+                <?php
+                $mainCat = null;
+                foreach ($model->categories as $cat) {
+                    if (!$cat->extend) {
+                        $mainCat = $cat;
+                        break;
+                    }
+                }
+                ?>
+                <span class="card-text text-secondary"><?= $mainCat ? Html::encode($mainCat->title) : '—' ?></span>
             </div>
             <div>
                 <span class="card-text"><?= $model->price ?> ₽</span>
@@ -49,7 +58,7 @@ $viewUrl = Url::to(['view', 'id' => $model->id]);
         </div>
         <div class="mt-3 d-flex gap-2 justify-content-center">
             <?= $model->status->alias !== 'arhived'
-                ? Html::a('В архив', ['change-status', 'id' => $model->id, 'status' => 'arhived'], ['class' => 'btn btn-outline-warning'])
+                ? Html::a('В архив', ['change-status', 'id' => $model->id, 'status' => 'arhived'], ['class' => 'btn btn-outline-primary'])
                 : ''
             ?>
             <?= $model->status->alias == 'arhived'

@@ -1,8 +1,9 @@
 <?php
 
+use app\models\PayType;
 use yii\bootstrap5\LinkPager;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 use yii\widgets\ListView;
 
 /** @var yii\web\View $this */
@@ -10,48 +11,72 @@ use yii\widgets\ListView;
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="order-form">
 
-    <div class="mt-3">
-        <?= Html::a('Продолжить покупки', ['/catalog'], ['class' => 'btn btn-outline-info', 'data-pjax' => 0]) ?>
-    </div>
 
-    <div>
-        <div class="mt-3 mb-2 row justify-content-between border-bottom px-3">
-            <div class="col-5"></div>
-            <div class="col-5">Наименование товара</div>
-            <div class="d-flex justify-content-between col-2">
-                <div>кол-во</div>
-                <div>цена</div>
-                <div>сумма</div>
-            </div>
-        </div>
-        <?= ListView::widget([
-            'dataProvider' => $dataProviderItems,
-            'itemOptions' => ['class' => 'item'],
-            'itemView' => 'item',
-            'pager' => [
-                'class' => LinkPager::class
-            ],
+<div class="mt-3">
+    <?= Html::a('Продолжить покупки', ['/catalog'], ['class' => 'btn btn-outline-primary', 'data-pjax' => 0]) ?>
+</div>
+
+<div class="order-form mt-3">
+    <?php $form = ActiveForm::begin(['action' => ['create', 'basket_id' => $basket->id]]); ?>
+
+    <div class="row g-3">
+
+        <?= $form->field(new \app\models\Order(), 'address')->textInput([
+            'maxlength' => true,
+            'placeholder' => 'г. Санкт-Петербург, наб. Смоленки, д. 1, кв. 1',
         ]) ?>
 
-        <div class=" d-flex justify-content-end border-bottom mt-2 text-secondary">
-            <div class="d-flex justify-content-between col-2">
-                <div>кол-во</div>
-                <div>сумма</div>
-            </div>
-        </div>
-        <div class=" d-flex justify-content-end mt-1 mb-5">
-            <div class="d-flex justify-content-between col-2 fw-bold">
-                <div><?= $basket->amount ?></div>
-                <div><?= $basket->sum ?></div>
-            </div>
-        </div>
-    </div>
+        <?= $form->field(new \app\models\Order(), 'phone')->widget(
+            \yii\widgets\MaskedInput::class,
+            [
+                'mask' => '+7(999)-999-99-99',
+                'options' => [
+                    'placeholder' => '+7(999)-999-99-99',
+                ],
+            ]
+        ) ?>
 
-    <div class="d-flex gap-3 justify-content-end">
-        <?= Html::a('Оформить заказ', ['/create', 'basket_id' => $basket->id], ['class' => 'btn btn-success', 'data-method' => 'post'])
-        ?>
-    </div>
+        <div class="d-flex justify-content-start gap-3">
+            <?= $form->field(new \app\models\Order(), 'date')->textInput(['type' => 'date', 'value' => date('Y-m-d'),]) ?>
+            <?= $form->field(new \app\models\Order(), 'time')->textInput(['type' => 'time', 'value' => date('H:i'),]) ?>
+        </div>
 
+        <?= $form->field(new \app\models\Order(), 'pay_type_id')->dropDownList(PayType::getPayType(), ['prompt' => 'Выберете способ оплаты:']) ?>
+
+    </div>
 </div>
+
+<h3 class="text-center pt-4">Cостав заказа</h3>
+
+<div>
+    <?= ListView::widget([
+        'dataProvider' => $dataProviderItems,
+        'itemOptions' => ['class' => 'item'],
+        'itemView' => 'item-order',
+        'pager' => [
+            'class' => LinkPager::class
+        ],
+        'summary' => ''
+    ]) ?>
+
+    <div class="border-white border-top border-2 py-3 order-total fw-bold fs-3">
+        <div class="row align-items-start">
+            <div class="col-1 offset-1">
+                Итого:
+            </div>
+
+            <div class="col-2 text-center">
+                <?= $basket->amount ?> шт.
+            </div>
+
+            <div class="col-2 offset-5 text-end">
+                <?= Yii::$app->formatter->asDecimal($basket->sum, 2) ?> ₽
+                <div class="text-end mt-3">
+                    <?= Html::submitButton('Оформить заказ', ['class' => 'btn btn-success']) ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?php ActiveForm::end(); ?>

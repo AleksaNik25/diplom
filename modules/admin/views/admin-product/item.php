@@ -12,7 +12,7 @@ $images = array_map(function ($item) use ($model) {
 $viewUrl = Url::to(['view', 'id' => $model->id]);
 ?>
 
-<div class="card mt-3" style="max-width: 18rem; min-width: 18rem;">
+<div class="card mt-3 cart-style" style="max-width: 18rem; min-width: 18rem;">
     <a href="<?= $viewUrl ?>" class="text-decoration-none">
         <div class="img-cart-style">
             <?= Carousel::widget([
@@ -27,10 +27,10 @@ $viewUrl = Url::to(['view', 'id' => $model->id]);
             ?>
         </div>
     </a>
-    <div class="card-body">
+    <div class="card-body text-center">
         <div>
             <div>
-                <span class="card-text">Пользователь: <?= $model->user->login ?></span>
+                <span class="card-text">Продавец: <?= $model->user->login ?></span>
             </div>
             <hr>
             <h5 class="card-title fw-bold">
@@ -39,7 +39,7 @@ $viewUrl = Url::to(['view', 'id' => $model->id]);
                 </a>
             </h5>
             <div>
-                <span class="card-text"><?= $model->category->title ?></span>
+                <span class="card-text"><?= $model->categoryTitle ?></span>
             </div>
             <div>
                 <span class="card-text"><?= $model->price ?> ₽</span>
@@ -50,11 +50,11 @@ $viewUrl = Url::to(['view', 'id' => $model->id]);
         </div>
         <div class="mt-3 d-flex gap-2 justify-content-center">
             <?= $model->status->alias !== 'on sale'
-                ? Html::a('Опубликовать', ['change-status', 'id' => $model->id, 'status' => 'on sale'], ['class' => 'btn btn-outline-success'])
+                ? Html::a('Опубликовать', ['change-status', 'id' => $model->id, 'status' => 'on sale'], ['class' => 'btn btn-success'])
                 : ''
             ?>
             <?= $model->status->alias !== 'arhived'
-                ? Html::a('В архив', ['change-status', 'id' => $model->id, 'status' => 'arhived'], ['class' => 'btn btn-outline-warning'])
+                ? Html::a('В архив', ['change-status', 'id' => $model->id, 'status' => 'arhived'], ['class' => 'btn btn-primary'])
                 : ''
             ?>
         </div>

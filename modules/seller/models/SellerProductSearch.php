@@ -11,63 +11,51 @@ use app\models\Product;
  */
 class SellerProductSearch extends Product
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $category_id; // Виртуальное поле для фильтрации
+
     public function rules()
     {
         return [
-            [['id', 'user_id', 'category_id', 'status_id'], 'integer'],
+            [['id', 'user_id', 'status_id'], 'integer'],
+            [['category_id'], 'integer'], // Добавлено
             [['title', 'preview', 'care_recommendations', 'price'], 'safe'],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
-        $query = Product::find();
-
-        // add conditions that should always apply here
+        // distinct() обязателен при фильтрации через Many-to-Many, чтобы не дублировать товары
+        $query = Product::find()->distinct();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
         $this->load($params);
-
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
+        // Подключаем связь categories для фильтрации, но без жадной загрузки (false)
+        $query->joinWith(['categories' => function ($q) {
+            $q->onCondition(['category.id' => $this->category_id]);
+        }], false);
+
         $query->andFilterWhere([
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'category_id' => $this->category_id,
-            'status_id' => $this->status_id,
+            'product.id' => $this->id,
+            'product.user_id' => $this->user_id,
+            'product.status_id' => $this->status_id,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'preview', $this->preview])
-            ->andFilterWhere(['like', 'care_recommendations', $this->care_recommendations])
-            ->andFilterWhere(['like', 'price', $this->price]);
+        $query->andFilterWhere(['like', 'product.title', $this->title])
+            ->andFilterWhere(['like', 'product.preview', $this->preview])
+            ->andFilterWhere(['like', 'product.care_recommendations', $this->care_recommendations])
+            ->andFilterWhere(['like', 'product.price', $this->price]);
 
         return $dataProvider;
     }

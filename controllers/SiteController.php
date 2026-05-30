@@ -81,12 +81,20 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            Yii::$app->session->setFlash('success', 'Вы успешно вошли в систему');
             if (Yii::$app->user->identity->isClient) {
+                Yii::$app->session->setFlash('success', 'Вы успешно вошли в систему');
                 return $this->redirect('/account');
             } elseif (Yii::$app->user->identity->isSeller) {
-                return $this->redirect('/seller');
+                if ($model->user->userLE->approval === 1) {
+                    Yii::$app->session->setFlash('success', 'Вы успешно вошли в систему');
+                    return $this->redirect('/seller');
+                } else {
+                    Yii::$app->user->logout();
+                    Yii::$app->session->setFlash('info', 'Ваш аккаунт еще не прошел модерацию');
+                    return $this->redirect('/');
+                }
             } else {
+                Yii::$app->session->setFlash('success', 'Вы успешно вошли в систему');
                 return $this->redirect('/admin');
             }
         }
@@ -138,8 +146,7 @@ class SiteController extends Controller
             $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
             if ($user = $model->registerLe()) {
                 if ($model->upload($user)) {
-                    Yii::$app->session->setFlash('success', 'Вы успешно зарегистрировались');
-                    Yii::$app->user->login($user, 3600 * 24 * 30);
+                    Yii::$app->session->setFlash('success', 'Вы успешно зарегистрировались, ожидайте модерации');
                     return $this->goHome();
                 } 
             } 

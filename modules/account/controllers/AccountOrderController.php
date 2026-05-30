@@ -2,10 +2,13 @@
 
 namespace app\modules\account\controllers;
 
+use app\models\Assist;
 use app\models\Basket;
 use app\models\BasketItem;
 use app\models\Order;
 use app\models\OrderItem;
+use app\models\PayType;
+use app\models\Status;
 use app\modules\account\models\AccountOrderSearch;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -50,6 +53,8 @@ class AccountOrderController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'statuses' => Assist::getColsItems(Status::tableName(), ['title', 'alias']),
+            'status_order' => Status::getStatusesAlias(),
         ]);
     }
 
@@ -61,14 +66,18 @@ class AccountOrderController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
         $dataProviderItems = new ActiveDataProvider([
             'query' => OrderItem::find()
                 ->where(["order_id" => $id]),
         ]);
-        
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
             'dataProviderItems' => $dataProviderItems,
+            'statuses' => Assist::getColsItems(Status::tableName(), ['title', 'alias']),
+            'order' => $model,
         ]);
     }
 
@@ -81,22 +90,33 @@ class AccountOrderController extends Controller
     {
         $basket = Basket::findOne($basket_id);
 
+        $payType = PayType::getPayType();
+
         $dataProviderItems = new ActiveDataProvider([
             'query' => BasketItem::find()
                 ->where("basket_item.basket_id = $basket_id"),
         ]);
 
         if ($this->request->isPost) {
-            if ($order = Order::createOrder($basket_id)) {
-                return $this->redirect(['view', 'id' => $order]);
-            } else {
-            Yii::debug($order);
-        }
+            $post = $this->request->post('Order'); 
+            $orderId = Order::createOrder(
+                $basket_id,
+                (int) $post['pay_type_id'],
+                $post['address'],
+                $post['phone'],
+                $post['date'],
+                $post['time'],
+            );
+            if ($orderId) {
+                return $this->redirect(['view', 'id' => $orderId]);
+            }
         }
 
+       
         return $this->render('create', [
             'basket' => $basket,
             'dataProviderItems' => $dataProviderItems,
+            'payType' => $payType,
         ]);
     }
 

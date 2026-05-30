@@ -74,4 +74,12 @@ class Status extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Product::class, ['status_id' => 'id']);
     }
+
+    public static function getStatusesAlias(): array
+    {
+        return static::find()
+            ->select('id')
+            ->indexBy('alias')
+            ->column();
+    }
 }

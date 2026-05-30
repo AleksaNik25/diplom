@@ -4,11 +4,12 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Category $model */
+/** @var app\models\Category[] $subcategories */
 
-$this->title = 'Редактирование категории товаров: ' . $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Categories', 'url' => ['index']];
+$this->title = 'Редактирование категории: ' . $model->title;
+$this->params['breadcrumbs'][] = ['label' => 'Категории', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="category-update">
 
@@ -16,6 +17,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'subcategories' => $subcategories,
     ]) ?>
 
 </div>

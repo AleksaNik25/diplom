@@ -13,7 +13,7 @@ use yii\helpers\VarDumper;
         <li class="list-group-item"><?= $model->parent_id ?></li>
     </ul>
     <div class="d-flex justify-content-around m-2">
-        <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
+        <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [

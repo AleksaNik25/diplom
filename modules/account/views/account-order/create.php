@@ -14,6 +14,7 @@ $this->title = 'Создание заказа';
     <?= $this->render('_form', [
         'basket' => $basket,
         'dataProviderItems' => $dataProviderItems,
+        'payType' => $payType,
     ]) ?>
 
 </div>

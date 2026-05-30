@@ -5,6 +5,7 @@ namespace app\modules\account\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Order;
+use Yii;
 
 /**
  * AccountOrderSearch represents the model behind the search form of `app\models\Order`.
@@ -41,12 +42,15 @@ class AccountOrderSearch extends Order
      */
     public function search($params)
     {
-        $query = Order::find();
+        $query = Order::find()->where(['user_id' => Yii::$app->user->id]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 3
+            ],
         ]);
 
         $this->load($params);

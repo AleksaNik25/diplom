@@ -1,7 +1,7 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\Html;
+use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\SellerCompanySearch $model */
@@ -14,11 +14,15 @@ use yii\widgets\ActiveForm;
         'action' => ['index'],
         'method' => 'get',
         'options' => [
-            'data-pjax' => 1
+            'data-pjax' => 1,
+            'class' => 'd-flex align-items-end gap-3',
+            'id' => 'form-search'
         ],
     ]); ?>
 
     <?= $form->field($model, 'title')->textInput() ?>
+
+    <?= $form->field($model, 'person')->textInput() ?>
 
     <?= $form->field($model, 'inn')->textInput() ?>
 
@@ -27,8 +31,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'email')->textInput() ?>
 
     <div class="form-group d-flex gap-2">
-        <?= Html::submitButton('Найти', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Сбросить', 'index', ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('<i class="fas fa-redo-alt"></i>', 'index', ['class' => 'btn btn-outline-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

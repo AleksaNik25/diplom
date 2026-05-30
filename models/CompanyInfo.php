@@ -32,13 +32,11 @@ class CompanyInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'inn', 'address', 'email'], 'required'],
+            [['company_id', 'title', 'inn', 'address', 'email', 'person'], 'required'],
             [['company_id'], 'integer'],
-            [['title', 'inn', 'address', 'email'], 'string', 'max' => 255],
-
-            [['company_id'], 'required', "on" => self::SCENARIO_BEFORE_CREATE],
-            [['company_id'], 'unique', "on" => self::SCENARIO_BEFORE_CREATE],
-            [['company_id'], 'exist', "on" => self::SCENARIO_BEFORE_CREATE, 'skipOnError' => true, 'targetClass' => Company::class, 'targetAttribute' => ['company_id' => 'id']], 
+            [['title', 'inn', 'address', 'email', 'person'], 'string', 'max' => 255],
+            [['company_id'], 'unique'],
+            [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::class, 'targetAttribute' => ['company_id' => 'id']],
         ];
     }
 
@@ -53,6 +51,7 @@ class CompanyInfo extends \yii\db\ActiveRecord
             'inn' => 'ИНН',
             'address' => 'Юридический адрес',
             'email' => 'Адрес электронной почты',
+            'person' => 'Контактное лицо',
         ];
     }
 

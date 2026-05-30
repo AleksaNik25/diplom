@@ -5,15 +5,10 @@ namespace app\modules\account\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Favorits;
+use Yii;
 
-/**
- * AccountFavoritsSearch represents the model behind the search form of `app\models\Favorits`.
- */
 class AccountFavoritsSearch extends Favorits
 {
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -21,45 +16,52 @@ class AccountFavoritsSearch extends Favorits
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
-        $query = Favorits::find();
+        $query = Favorits::find()->distinct();
 
-        // add conditions that should always apply here
+        $query->joinWith(['product' => function ($q) {
+            $q->joinWith(['categories']);
+        }], false);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 12],
+            'sort' => [
+                'attributes' => [
+                    'product_title' => [
+                        'asc' => ['product.title' => SORT_ASC],
+                        'desc' => ['product.title' => SORT_DESC],
+                        'label' => 'Наименование товара',
+                    ],
+                    'category_title' => [
+                        'asc' => ['category.title' => SORT_ASC],
+                        'desc' => ['category.title' => SORT_DESC],
+                        'label' => 'Категория товара',
+                    ],
+                    'id' => [
+                        'asc' => ['favorits.id' => SORT_ASC],
+                        'desc' => ['favorits.id' => SORT_DESC],
+                        'label' => 'ID',
+                    ],
+                ],
+            ]
         ]);
 
         $this->load($params);
-
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'product_id' => $this->product_id,
+            'favorits.id' => $this->id,
+            'favorits.user_id' => Yii::$app->user->id,
+            'favorits.product_id' => $this->product_id,
         ]);
 
         return $dataProvider;

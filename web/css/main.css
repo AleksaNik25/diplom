@@ -1,0 +1,123 @@
+.logo {
+    width: 40px;
+    height: auto;
+}
+
+.bg {
+    background-color: rgb(239, 242, 190);
+}
+
+.navigation-style {
+    color: rgba(32, 32, 32, 0.7);
+    background-color: transparent;
+    font-size: larger;
+    text-decoration: none;
+    position: relative;
+    transition: all 0.2s ease;
+    outline: none;
+    display: inline-block;
+    padding: 8px 12px;
+}
+
+.navigation-style:hover,
+.navigation-style:focus,
+.navigation-style:focus-visible {
+    color: #000000;
+    transform: translateY(-1px);
+}
+
+.navigation-style::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #000000;
+    transition: width 0.3s ease;
+}
+
+.navigation-style:hover::after,
+.navigation-style:focus::after,
+.navigation-style:focus-visible::after {
+    width: 100%;
+}
+
+
+#footer {
+    color: rgba(255, 255, 255, 0.7);
+    background-color: #1A3306;
+    transition: all 0.3s ease;
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.footer-link:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.footer-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #ffffff;
+    transition: width 0.3s ease;
+}
+
+.footer-link:hover::after {
+    width: 100%;
+}
+
+.footer-copyright {
+    border-top: 1px solid #ffffff;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.5px;
+    padding-top: 45px;
+    text-align: center;
+}
+
+.footer-contacts {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.footer-contact-link {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-contact-link:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .d-flex.flex-wrap {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .footer-nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footer-contacts {
+        margin-top: 15px;
+    }
+}

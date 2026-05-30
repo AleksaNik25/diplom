@@ -1,20 +1,22 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\Html;
+use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\ProductSearch $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="product-search w-50">
+<div class="product-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
         'options' => [
-            'data-pjax' => 1
+            'data-pjax' => 1,
+            'class' => 'd-flex align-items-end gap-3',
+            'id' => 'form-search'
         ],
     ]); ?>
 

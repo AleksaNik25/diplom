@@ -2,11 +2,18 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Order;
+use app\models\OrderItem;
+use app\models\Product;
+use app\models\Status;
 use app\models\User;
+use app\models\UserLE;
 use app\modules\admin\models\AdminUserSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -89,17 +96,97 @@ class AdminUserController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionChangeStatus($id)
     {
-        $model = $this->findModel($id);
+        $user = User::findOne($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (!$user || !$user->userLE) {
+            Yii::$app->session->setFlash("error", "Пользователь не найден");
+            return $this->redirect('/admin/admin-user');
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $userLE = $user->userLE;
+
+        // Если заблокирован — разблокируем (утверждаем)
+        if ($userLE->approval == 2) {
+            $userLE->approval = 1;
+            if ($userLE->save(false)) {
+                Yii::$app->session->setFlash("success", "Продавец разблокирован и подтверждён");
+            } else {
+                Yii::$app->session->setFlash("error", "Ошибка разблокировки");
+            }
+            return $this->redirect('/admin/admin-user');
+        }
+
+        // Если ожидает подтверждения — утверждаем
+        if ($userLE->approval == 0) {
+            $userLE->approval = 1;
+            if ($userLE->save(false)) {
+                Yii::$app->session->setFlash("success", "Продавец подтверждён");
+            } else {
+                Yii::$app->session->setFlash("error", "Ошибка подтверждения");
+            }
+            return $this->redirect('/admin/admin-user');
+        }
+
+        // Если подтверждён — блокируем
+        if ($userLE->approval == 1) {
+            $userLE->approval = 2;
+
+            if (!$userLE->save(false)) {
+                Yii::$app->session->setFlash("error", "Ошибка блокировки");
+                return $this->redirect('/admin/admin-user');
+            }
+
+            // Архивируем все товары продавца
+            $archivedStatusId = Status::getStatusId('arhived'); // псевдоним архива
+            $checkStatusId = Status::getStatusId('check');
+
+            // Берём все товары продавца, кроме уже архивированных
+            $products = Product::find()
+                ->where(['user_id' => $user->id])
+                ->andWhere(['!=', 'status_id', $archivedStatusId])
+                ->all();
+
+            $productIds = [];
+            foreach ($products as $product) {
+                $productIds[] = $product->id;
+                $product->status_id = $archivedStatusId;
+                $product->save(false);
+            }
+
+            // Отменяем заказы, содержащие товары заблокированного продавца
+            if (!empty($productIds)) {
+                $newStatusId = Status::getStatusId('new');
+                $deliveryStatusId = Status::getStatusId('in delivery');
+                $cancelStatusId = Status::getStatusId('canceled');
+
+                // Находим order_item с этими товарами
+                $affectedOrderIds = OrderItem::find()
+                    ->select('order_id')
+                    ->where(['product_id' => $productIds])
+                    ->column();
+
+                if (!empty($affectedOrderIds)) {
+                    // Фильтруем только заказы со статусом «Новый» или «Передан в доставку»
+                    $ordersToCancel = Order::find()
+                        ->where(['id' => $affectedOrderIds])
+                        ->andWhere(['status_id' => [$newStatusId, $deliveryStatusId]])
+                        ->all();
+
+                    foreach ($ordersToCancel as $order) {
+                        $order->status_id = $cancelStatusId;
+                        $order->save(false);
+                    }
+                }
+            }
+
+            Yii::$app->session->setFlash("success", "Продавец заблокирован. Его товары архивированы, затронутые заказы отменены.");
+            return $this->redirect('/admin/admin-user');
+        }
+
+        Yii::$app->session->setFlash("error", "Неизвестный статус продавца");
+        return $this->redirect('/admin/admin-user');
     }
 
     /**

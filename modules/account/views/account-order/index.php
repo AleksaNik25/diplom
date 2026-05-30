@@ -11,29 +11,51 @@ use yii\widgets\Pjax;
 /** @var yii\web\View $this */
 /** @var app\modules\account\models\AccountOrderSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
-
-$this->title = 'Мои заказы';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<?php
+
+$this->title = 'Личный кабинет';
+
+?>
+<div class="account-default-index d-flex gap-3 mb-4 mt-4">
+
+    <?= Html::a('Избранные', ['/account/account-favorits'], ['class' => 'btn btn-danger']) ?>
+
+    <?= Html::a('Мои отзывы', ['/account/account-comment/view'], ['class' => 'btn btn-primary']) ?>
+
+</div>
+
 <div class="order-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?php
+    $this->title = 'Мои заказы';
+    ?>
 
-    <p class="mt-3 d-flex gap-2">
-        <?= Html::a('Назад', ['default/index'], ['class' => 'btn btn-outline-primary']) ?>
-    </p>
+    <h1><?= Html::encode($this->title) ?></h1>
 
     <?php Pjax::begin(); ?>
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= ListView::widget([
-        'dataProvider' => $dataProvider,
-        'pager' => [
-            'class' => LinkPager::class
-        ],
-        'itemOptions' => ['class' => 'item'],
-        'itemView' => 'item',
-    ]) ?>
+    <?php if ($dataProvider->totalCount): ?>
+        <?= ListView::widget([
+            'dataProvider' => $dataProvider,
+            'itemOptions' => ['class' => 'item'],
+            'itemView' => fn($model) => $this->render('item', [
+                'model' => $model,
+                'statuses' => $statuses,
+                'status_order' => $status_order
+            ]),
+            'pager' => [
+                'class' => LinkPager::class
+            ],
+        ]) ?>
+
+    <?php else: ?>
+        <div class="alert alert-info" role="alert">
+            У вас еще нет заказов
+        </div>
+    <?php endif ?>
 
     <?php Pjax::end(); ?>
 

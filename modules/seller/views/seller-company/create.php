@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /** @var app\models\Company $model */
 
 $this->title = 'Добавить компанию';
-$this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Мои компании', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-create">
@@ -14,7 +14,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('create-company', [
-        'model' => $model,
+        'modelInfo' => $model,
+        'company' => $company,
     ]) ?>
 
 </div>

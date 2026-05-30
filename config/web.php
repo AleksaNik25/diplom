@@ -52,19 +52,31 @@ $config = [
             'rules' => [
             ],
         ],
+        'assetManager' => [
+            'bundles' => [
+                'yii\bootstrap\BootstrapAsset' => [
+                    'class' => 'yii\bootstrap5\BootstrapAsset',
+                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'class' => 'yii\bootstrap5\BootstrapPluginAsset',
+                ],
+            ],
+        ],
         
     ],
     'params' => $params,
     'modules' => [
         'admin' => [
             'class' => 'app\modules\admin\Module',
+            'defaultRoute' => 'admin-order'
         ],
         'seller' => [ 
             'class' => 'app\modules\seller\Module', 
+            'defaultRoute' => 'seller-product'
         ],
         'account' => [
             'class' => 'app\modules\account\Module',
-            // 'defaultRoute' => 'account-order',
+            'defaultRoute' => 'account-order',
         ],
     ],
 ];

@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <p>
-    <?= Html::a('Назад', ['index', 'id' => $model->id], ['class' => 'btn btn-outline-primary']) ?>
+    <?= Html::a('<i class="fas fa-arrow-left"></i>', ['index', 'id' => $model->id], ['class' => 'btn btn-outline-primary']) ?>
 </p>
 
 <div class="product-form w-50">

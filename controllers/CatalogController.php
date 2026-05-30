@@ -4,12 +4,15 @@ namespace app\controllers;
 
 use app\models\Product;
 use app\models\CatalogSearch;
+use app\models\Comment;
+use app\models\Rating;
 use app\models\Status;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 
 /**
  * CatalogController implements the CRUD actions for Product model.
@@ -34,6 +37,26 @@ class CatalogController extends Controller
         );
     }
 
+    public function actionStars($id)
+    {
+        if ($product = Product::findOne(["id" => $id])) {
+            $userId = Yii::$app->user->id;
+            $rating = Rating::findOne(['user_id' => $userId, 'product_id' => $id]);
+
+            if (!$rating) {
+                $model = new Rating();
+                $model->user_id = $userId;
+                $model->product_id = $id;
+                $model->estimation = $this->request->post('estimation');
+                if ($model->save()) {
+                    return $this->asJson(true);
+                }
+            }
+            return $this->asJson(false);
+        }
+        return $this->asJson(false);
+    }
+
     /**
      * Lists all Product models.
      *
@@ -44,20 +67,22 @@ class CatalogController extends Controller
         $searchModel = new CatalogSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => Product::find()->where(['status_id' => Status::getStatusId('on sale')]),
+        // $dataProvider = new ActiveDataProvider([
+        //     'query' =>
+            
+        //     Product::find()->where(['status_id' => Status::getStatusId('on sale')]),
 
-            'pagination' => [
-                'pageSize' => 24
-            ],
-            /*
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        //     'pagination' => [
+        //         'pageSize' => 24
+        //     ],
+        //     /*
+        //     'sort' => [
+        //         'defaultOrder' => [
+        //             'id' => SORT_DESC,
+        //         ]
+        //     ],
+        //     */
+        // ]);
         
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -73,8 +98,43 @@ class CatalogController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Comment::find()
+                ->where(['product_id' => $model->id, 'parent_id' => null])
+                ->with(['replies.user', 'replies.replies.user', 'replies.replies.replies.user', 'user'])
+                ->orderBy(['created_at' => SORT_DESC]),
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC
+                ]
+            ],
+            'pagination' => [
+                'pageSize' => 5
+            ],
+        ]);
+
+        $stars = Rating::find()
+            ->where(['user_id' => Yii::$app->user->id, 'product_id' => $id])
+            ->select('estimation')
+            ->scalar();
+
+            // VarDumper::dump($this->stars, 10, true); die;
+
+        $stars = $stars ? (float)$stars : 0;
+
+        $productModel = $this->findModel($id);
+        $productModel->user_stars = $stars;
+
+        $commentModel = new Comment();
+        $commentModel->product_id = $id;
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $productModel,        
+            'dataProvider' => $dataProvider,
+            'model_comment' => $commentModel,
+            'stars' => $stars,
         ]);
     }
 

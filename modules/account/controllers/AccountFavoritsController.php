@@ -4,6 +4,8 @@ namespace app\modules\account\controllers;
 
 use app\models\Favorits;
 use app\modules\account\models\AccountFavoritsSearch;
+use Yii;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -65,21 +67,34 @@ class AccountFavoritsController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionAdd($product_id)
     {
-        $model = new Favorits();
-
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            $model = new Favorits();
+            $model->user_id = Yii::$app->user->id;
+            $model->product_id = $product_id;
+            if ($model->save()) {
+                return $this->asJson([
+                    'success' => true,
+                    'favorit_id' => $model->id,
+                    'product_id' => $product_id,
+                ]);
             }
-        } else {
-            $model->loadDefaultValues();
         }
+        return $this->asJson(['success' => false]);
+    }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+    public function actionRemove($id)
+    {
+        $model = $this->findModel($id);
+        $product_id = $model->product_id;
+        if ($model->delete()) {
+            return $this->asJson([
+                'success' => true,
+                'product_id' => $product_id,
+            ]);
+        }
+        return $this->asJson(['success' => false]);
     }
 
     /**

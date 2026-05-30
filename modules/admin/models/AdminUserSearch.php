@@ -40,7 +40,7 @@ class AdminUserSearch extends User
      */
     public function search($params)
     {
-        $query = User::find();
+        $query = User::find()->innerJoin('user_LE', 'user.id = user_LE.user_id');
 
         // add conditions that should always apply here
 

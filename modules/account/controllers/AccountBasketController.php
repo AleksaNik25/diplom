@@ -41,21 +41,13 @@ class AccountBasketController extends Controller
     public function actionIndex()
     {
         $basket = Basket::findOne(['user_id' => Yii::$app->user->id]);
-        $dataProviderItems = new ActiveDataProvider(
-            [
-                'query' => BasketItem::find()
-                    ->where('basket_item.basket_id = basket.id')
-                    ->innerJoin('basket', 'basket.user_id = ' . Yii::$app->user->id),
-            /*
+
+        $dataProviderItems = new ActiveDataProvider([
+            'query' => BasketItem::find()
+                ->where(['basket_item.basket_id' => $basket?->id ?? 0]),
             'pagination' => [
-                'pageSize' => 50
+                'pageSize' => 5
             ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
         ]);
 
         return $this->render('index', [
@@ -77,34 +69,12 @@ class AccountBasketController extends Controller
         ]);
     }
 
-    // /**
-    //  * Creates a new Basket model.
-    //  * If creation is successful, the browser will be redirected to the 'view' page.
-    //  * @return string|\yii\web\Response
-    //  */
-    // public function actionCreate()
-    // {
-    //     $model = new Basket();
-
-    //     if ($this->request->isPost) {
-    //         if ($model->load($this->request->post()) && $model->save()) {
-    //             return $this->redirect(['view', 'id' => $model->id]);
-    //         }
-    //     } else {
-    //         $model->loadDefaultValues();
-    //     }
-
-    //     return $this->render('create', [
-    //         'model' => $model,
-    //     ]);
-    // }
-
     public function actionAdd($product_id)
     {
         $model = Basket::findOne(['user_id' => Yii::$app->user->id]) ?? Basket::create();
         $model->addItem($product_id);
-        // return $this->asJson(true);
-        return $this->actionIndex();
+        return $this->asJson(true);
+        // return $this->actionIndex();
         // return $this->redirect('/account/account-basket');
     }
 
@@ -112,8 +82,8 @@ class AccountBasketController extends Controller
     {
         $model = Basket::findOne(['user_id' => Yii::$app->user->id]);
         $model->addDec($item_id);
-        // return $this->asJson(true);
-        return $this->actionIndex();
+        return $this->asJson(true);
+        // return $this->actionIndex();
         // return $this->redirect('/account/account-basket');
     }
 
@@ -121,20 +91,26 @@ class AccountBasketController extends Controller
     {
         $model = BasketItem::findOne(['id' => $item_id]);
         if ($model) {
-            $model->delete();
+            if ($basket = Basket::findOne($model->basket_id)) {
+                $basket->amount -= $model->amount;
+                $basket->sum -= $model->sum;
+                if ($basket->save()) {
+                    $model->delete();
+                }
+            }
         }
-        // return $this->asJson(true);
-        return $this->actionIndex();
+        return $this->asJson(true);
+        // return $this->actionIndex();
         // return $this->redirect('/account/account-basket');
     }
 
     public function actionClear($id)
     {
         $model = Basket::findOne($id);
-        if ($model) {
+        if ($model) {            
             $model->delete();
         }
-        return $this->actionIndex();
+        return true;
     }
 
     public function actionGetCount()

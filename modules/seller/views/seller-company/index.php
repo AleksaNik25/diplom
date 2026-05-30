@@ -12,7 +12,7 @@ use yii\widgets\Pjax;
 /** @var app\models\SellerCompanySearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Компании';
+$this->title = 'Мои компании';
 $this->params['breadcrumbs'][] = $this->title;
 
 Yii::debug($dataProvider->totalCount);
@@ -22,7 +22,7 @@ Yii::debug($dataProvider->totalCount);
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p class="mt-3 d-flex gap-2">
-        <?= Html::a('Назад', ['default/index'], ['class' => 'btn btn-outline-primary']) ?>
+        <?= Html::a('<i class="fas fa-arrow-left"></i>', ['seller-product/index'], ['class' => 'btn btn-outline-primary']) ?>
         <?= Html::a('Добавить компанию', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "category".
@@ -32,7 +33,8 @@ class Category extends \yii\db\ActiveRecord
     {
         return [
             [['title'], 'required'],
-            [['parent_id'], 'integer'],
+            [['parent_id', 'extend'], 'default', 'value' => null],
+            [['parent_id', 'extend'], 'integer'],
             [['title'], 'string', 'max' => 255],
             [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['parent_id' => 'id']],
         ];
@@ -46,7 +48,8 @@ class Category extends \yii\db\ActiveRecord
         return [
             'id' => '№',
             'title' => 'Название',
-            'parent_id' => 'Подкатегория',
+            'parent_id' => 'Категория',
+            'extend' => 'Расширение',
         ];
     }
 
@@ -87,5 +90,14 @@ class Category extends \yii\db\ActiveRecord
             ->indexBy('id')
             ->column()
         ;
+    }
+
+    public static function getCategoryes()
+    {
+        return (new Query())
+            ->select('title')
+            ->from(self::tableName())
+            ->indexBy('id')
+            ->column();
     }
 }

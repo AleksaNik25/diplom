@@ -12,7 +12,6 @@ use yii\widgets\Pjax;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Корзина';
-$this->params['breadcrumbs'][] = $this->title;
 $basketNoEmpty = $basket && $dataProviderItems->totalCount;
 ?>
 <div class="basket-index">
@@ -20,18 +19,18 @@ $basketNoEmpty = $basket && $dataProviderItems->totalCount;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php Pjax::begin([
-        'id' => 'cart-pjax',
+        'id' => 'basket-pjax',
         'enablePushState' => false,
         'timeout' => 5000,
     ]); ?>
 
     <div class="d-flex justify-content-between mt-3 mb-3">
         <div>
-            <?= Html::a('Продолжить покупки', ['/catalog'], ['class' => 'btn btn-outline-info', 'data-pjax' => 0]) ?>
+            <?= Html::a('Продолжить покупки', ['/catalog'], ['class' => 'btn btn-outline-primary', 'data-pjax' => 0]) ?>
         </div>
         <div>
             <?= $basketNoEmpty
-                ? Html::a('Очистить корзину', ['clear', 'id' => $basket->id], ['class' => 'btn btn-outline-danger cart-btn'])
+                ? Html::a('Очистить корзину', ['clear', 'id' => $basket->id], ['class' => 'btn btn-outline-danger', 'id'    => 'btn-clear-cart'])
                 : ""
             ?>
         </div>
@@ -47,17 +46,37 @@ $basketNoEmpty = $basket && $dataProviderItems->totalCount;
             ],
         ]) ?>
 
+        <div class="border-white border-top border-2 py-3 order-total fw-bold fs-3">
+            <div class="row align-items-start">
+                <div class="col-1 offset-1">
+                    Итого:
+                </div>
+
+                <div class="col-2 text-center">
+                    <?= $basket->amount ?> шт.
+                </div>
+
+                <div class="col-2 offset-5 text-end">
+                    <?= Yii::$app->formatter->asDecimal($basket->sum, 2) ?> ₽
+                    <div class="text-end mt-3">
+                        <?= $basketNoEmpty
+                            ? Html::a('Оформить заказ', ['/account/account-order/create', 'basket_id' => $basket->id], ['class' => 'btn btn-success', 'data-pjax' => 0])
+                            : ""
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     <?php else: ?>
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-primary" role="alert">
             В корзине пока нет товаров
         </div>
     <?php endif ?>
 
-    <div class="d-flex justify-content-end mt-3">
-        <?= $basketNoEmpty
-            ? Html::a('Оформить заказ', ['/account/account-order/create', 'basket_id' => $basket->id], ['class' => 'btn btn-success'])
-            : ""
-        ?>
-    </div>
-
     <?php Pjax::end(); ?>
+
+    <?php
+    $this->registerJsFile('/js/basket.js', ['depends' => 'yii\web\YiiAsset']);
+    ?>
+
+</div>

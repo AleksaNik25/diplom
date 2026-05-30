@@ -5,100 +5,81 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Product;
+use app\models\Status;
 use Yii;
 
-/**
- * CatalogSearch represents the model behind the search form of `app\models\Product`.
- */
 class CatalogSearch extends Product
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $category_id;
+
     public function rules()
     {
         return [
-            [['id', 'user_id', 'category_id', 'status_id'], 'integer'],
+            [['id', 'user_id', 'status_id'], 'integer'],
+            [['category_id'], 'integer'],
             [['title', 'preview', 'care_recommendations', 'price'], 'safe'],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
-        $query = Product::find()->select("product.*, like.like_count, dislike.dislike_count")
-            ->where(['>', 'amount', 0])
-            ->with([
-                'productImage',
-                'category',
-                // `favourites`,
-            ])
-            ->leftJoin(
-                ["like" => "(SELECT COUNT(*) AS like_count, product_id
-                                        FROM `user_action_product`
-                                        WHERE `action` = 1
-                                        GROUP BY product_id)"],
-                "like.product_id = product.id"
-            )
-            ->leftJoin(
-                ["dislike" => "(SELECT COUNT(*) AS dislike_count, product_id
-                                        FROM `user_action_product`
-                                        WHERE `action` = 0
-                                        GROUP BY product_id)"],
-                "dislike.product_id = product.id"
-            );
+        $query = Product::find()->alias('product')->distinct();
+
+        $query->with(['productImages', 'categories']);
 
         if (Yii::$app->user?->identity?->isClient) {
-
-            $query
-                ->with([
-                    'favourites' => function ($query) {
-                        $query->andWhere(['user_id' => Yii::$app->user?->id]);
-                    },
-                ]);
+            $query->with([
+                'favorits' => function ($q) {
+                    $q->andWhere(['user_id' => Yii::$app->user->id]);
+                },
+            ]);
         }
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query'      => $query,
+            'pagination' => ['pageSize' => 24],
         ]);
 
         $this->load($params);
-
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'category_id' => $this->category_id,
-            'status_id' => $this->status_id,
-        ]);
+        // Всегда только товары со статусом on sale
+        $query->andWhere(['product.status_id' => Status::getStatusId('on sale')]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'preview', $this->preview])
-            ->andFilterWhere(['like', 'care_recommendations', $this->care_recommendations])
-            ->andFilterWhere(['like', 'price', $this->price]);
+        // Фильтр по названию
+        $query->andFilterWhere(['like', 'product.title', $this->title]);
+
+        // Фильтр по категории/подкатегории через product_category
+        if ($this->category_id) {
+            $selectedCat = Category::findOne($this->category_id);
+
+            if ($selectedCat && $selectedCat->parent_id === null) {
+                // Выбрана корневая категория — ищем товары у которых есть
+                // хотя бы одна подкатегория этой корневой
+                $childIds = Category::find()
+                    ->select('id')
+                    ->where(['parent_id' => $selectedCat->id])
+                    ->column();
+
+                $query->innerJoin(
+                    'product_category pc',
+                    'pc.product_id = product.id'
+                )->andWhere(['pc.category_id' => $childIds]);
+            } else {
+                // Выбрана конкретная подкатегория
+                $query->innerJoin(
+                    'product_category pc',
+                    'pc.product_id = product.id'
+                )->andWhere(['pc.category_id' => $this->category_id]);
+            }
+        }
 
         return $dataProvider;
     }

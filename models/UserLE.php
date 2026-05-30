@@ -50,10 +50,10 @@ class UserLE extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'inn' => 'Inn',
-            'snils' => 'Snils',
-            'shop_title' => 'Shop Title',
-            'approval' => 'Approval',
+            'inn' => 'ИНН',
+            'snils' => 'СНИЛС',
+            'shop_title' => 'Название магазина',
+            'approval' => 'Утвержден',
         ];
     }
 
@@ -91,5 +91,10 @@ class UserLE extends \yii\db\ActiveRecord
     {
         $user_id = $user_id ?? Yii::$app->user->id;
         return (self::findOne(["user_id" => $user_id]))->id;
+    }
+
+    public function getIsApproval()
+    {
+        return $this->approval === 1;
     }
 }

@@ -9,15 +9,14 @@ use yii\bootstrap5\Html;
 use yii\captcha\Captcha;
 
 $this->title = 'Регистрация';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="container d-flex justify-content-center">
     <div class="site-contact register-login-style">
         <h1 class="text-center pt-4"><?= Html::encode($this->title) ?></h1>
 
-        <div class="row d-flex justify-content-center pt-4 pb-3">
-            <div class="col-lg-5">
+        <div class="row d-flex justify-content-center p-4">
+            <div class="col-lg-6">
 
                 <?php $form = ActiveForm::begin(['id' => 'contact-form']); ?>
 
@@ -35,15 +34,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
-                <!-- <?php #$form->field($model, 'password')->passwordInput() ?>  повтор пароля -->
+                <?= $form->field($model, 'passwordRepeat')->passwordInput() ?>
 
                 <div class="form-group pt-3 text-center">
                     <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-success', 'name' => 'contact-button']) ?>
                 </div>
 
-                <!-- <p class="form-group pt-3 text-center">
-                    <?= Html::a('Регистрация продавца', ['site/registerLE'], ['class' => 'btn btn-outline-primary']) ?>
-                </p> -->
+                <div class="pt-3 pb-3 text-center">
+                    <?= Html::a('Зарегистрироваться как продавец', ['site/register-le'], ['class' => 'text-success']) ?>
+                </div>
 
                 <?php ActiveForm::end(); ?>
 

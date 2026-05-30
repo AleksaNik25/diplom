@@ -1,9 +1,15 @@
 <?php
 
+use kartik\rating\StarRating;
+use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Carousel;
 use yii\bootstrap5\Html;
+use yii\bootstrap5\LinkPager;
+use yii\helpers\Url;
 use yii\helpers\VarDumper;
 use yii\widgets\DetailView;
+use yii\widgets\ListView;
+use yii\widgets\Pjax;
 
 /** @var yii\web\View $this */
 /** @var app\models\Product $model */
@@ -18,85 +24,123 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p class="d-flex gap-3">
-        <?= Html::a('Назад', ['index', 'id' => $model->id], ['class' => 'btn btn-outline-primary']) ?>
+        <?= Html::a('<i class="fas fa-arrow-left"></i>', ['index', 'id' => $model->id], ['class' => 'btn btn-outline-primary']) ?>
 
         <?= $model->status->alias !== 'on sale'
             ? Html::a('Опубликовать', ['change-status', 'id' => $model->id, 'status' => 'on sale'], ['class' => 'btn btn-outline-success'])
             : ''
         ?>
 
-        <!-- <?= $model->status->alias === 'on sale'
-                    ? Html::a('Архивировать', ['index', 'id' => $model->id], ['class' => 'btn btn-outline-warning'])
-                    : ''
-                ?> -->
-
-        <!-- <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-                    'class' => 'btn btn-danger',
-                    'data' => [
-                        'confirm' => 'Are you sure you want to delete this item?',
-                        'method' => 'post',
-                    ],
-                ]) ?> -->
+        <?= $model->status->alias !== 'arhived'
+            ? Html::a('В архив', ['change-status', 'id' => $model->id, 'status' => 'arhived'], ['class' => 'btn btn-outline-warning'])
+            : ''
+        ?>
     </p>
 
     <?php
     $images = array_map(function ($item) use ($model) {
         return "<img src=\"/img/$item->photo\" alt=\"$model->title\" style=\"max-width: 30rem;  min-height: 450px; max-height: 450px;\" class=\"img-cart-style\">";
     }, $model->productImages);
-    // VarDumper::dump($images, 10, true);
     ?>
 
-    <div class="d-flex gap-3">
-        <div class="card" style="max-width: 30rem; min-width: 30rem;">
-            <div class="img-cart-style">
-                <?= Carousel::widget([
-                    'items' => $images,
-                    'options' => [
-                        'class' => 'carousel slide carousel-fade',
-                        'data-bs-ride' => "carousel",
-                        'data-bs-interval' => '7000',
-                        'style' => 'max-height: 600px;',
-                    ],
-                ]);
-                ?>
+    <div class="container mt-4">
+        <div class="row g-5 d-flex gap-5 justify-content-center">
+            <div class="card img-view" style="max-width: 30rem; min-width: 30rem;">
+                <div class="img-cart-style">
+                    <?= Carousel::widget([
+                        'items' => $images,
+                        'options' => [
+                            'class' => 'carousel slide carousel-fade',
+                            'data-bs-ride' => "carousel",
+                            'data-bs-interval' => '7000',
+                            'style' => 'max-height: 600px;',
+                        ],
+                    ]);
+                    ?>
+                </div>
+            </div>
+            <div class="col-sm-6 product-info">
+
+                <h1><?= Html::encode($this->title) ?></h1>
+
+                <p class="product-preview lead">
+                    <?= $model->preview ?>
+                </p>
+
+                <div class="product-category lead mb-3">
+                    <?php
+                    $cats = $model->categories;
+                    $regular = array_filter($cats, fn($c) => !$c->extend);
+                    $extended = array_filter($cats, fn($c) => $c->extend);
+                    ?>
+                    <?php if (!empty($regular)): ?>
+                        <div class="mb-2">
+                            <?php if (!empty($regular)): ?>
+                                <div class="mb-1">
+                                    <span>
+                                        <?= Html::encode(implode(' ✦ ', \yii\helpers\ArrayHelper::getColumn($regular, 'title'))) ?>
+                                    </span>
+                                </div>
+                            <?php endif ?>
+                        </div>
+                    <?php endif ?>
+                    <?php if (!empty($extended)): ?>
+                        <div class="mb-1">
+                            <span class="text-secondary">
+                                <?= Html::encode(implode(' ✦ ', \yii\helpers\ArrayHelper::getColumn($extended, 'title'))) ?>
+                            </span>
+                        </div>
+                    <?php endif ?>
+                </div>
+
+                <div class="product-price h2 mb-3">
+                    <?= Yii::$app->formatter->asDecimal($model->price, 2) ?> ₽
+                </div>
             </div>
         </div>
 
-        <?= DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-                'id',
-                [
-                    'attribute' => 'user_id',
-                    'value' => $model->user->login,
-                ],
-                [
-                    'attribute' => 'title',
-                    'value' => $model->title,
-                ],
-                [
-                    'attribute' => 'preview',
-                    'value' => $model->preview,
-                ],
-                [
-                    'attribute' => 'category_id',
-                    'value' => $model->category->title,
-                ],
-                [
-                    'attribute' => 'price',
-                    'value' => $model->price,
-                ],
-                [
-                    'attribute' => 'care_recommendations',
-                    'value' => $model->care_recommendations,
-                ],
-                [
-                    'attribute' => 'status_id',
-                    'value' => $model->status->title,
-                ],
 
-            ],
+        <div class="my-3 d-sm-flex gap-5 justify-content-center">
+            <div class="product-care_recommendations lead flex-wrap col-sm-8 my-3">
+                <?= $model->care_recommendations ?>
+            </div>
 
-        ]) ?>
+            <div class="product-star_rating lead flex-wrap my-3">
+                <?= $this->render("star", ["model" => $model]) ?>
+            </div>
+        </div>
+
+
+        <div class="my-3">
+            <h4>Отзывы о товаре</h4>
+        </div>
+
+        <?php Pjax::begin([
+            'id' => 'product-comments-pjax',
+            'enablePushState' => false,
+            'timeout' => 5000
+        ]); ?>
+
+        <?php if ($dataProvider->totalCount): ?>
+            <?= ListView::widget([
+                'dataProvider' => $dataProvider,
+                'itemOptions' => ['class' => 'item'],
+                'layout' => '{pager}<div class="d-flex flex-column gap-3">{items}</div>{pager}',
+                'itemView' => 'item_comment',
+                'viewParams' => [
+                    'product' => $model,
+                ],
+                'pager' => [
+                    'class' => LinkPager::class,
+                ]
+
+            ]) ?>
+        <?php else: ?>
+            <div class="alert alert-info" role="alert">
+                У этого товара еще нет отзывов.
+            </div>
+        <?php endif ?>
+
+        <?php Pjax::end(); ?>
     </div>
 </div>

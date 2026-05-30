@@ -2,7 +2,7 @@
 
 use app\models\Product;
 use yii\bootstrap5\LinkPager;
-use yii\helpers\Html;
+use yii\bootstrap5\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\widgets\ListView;
@@ -13,7 +13,6 @@ use yii\widgets\Pjax;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Каталог';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="product-index">
 
@@ -26,12 +25,12 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 
-    <div class="d-flex align-items-end justify-content-between">
-        <div class="mb-3">
-            <?= $dataProvider->sort->link('price') ?> |
-            <?= $dataProvider->sort->link('title') ?>
+    <div class="d-flex align-items-end justify-content-end">
+        <!-- <div class="mb-3">
+            <?php # $dataProvider->sort->link('price') ?> |
+            <?php # $dataProvider->sort->link('title') ?>
 
-        </div>
+        </div> -->
         <div>
             <?php echo $this->render('_search', ['model' => $searchModel]);  ?>
         </div>
@@ -50,6 +49,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php Pjax::end(); ?>
 
-
-
 </div>
+
+<?php
+$this->registerJsFile('/js/catalog.js', ['depends' => 'yii\web\YiiAsset']);
+?>

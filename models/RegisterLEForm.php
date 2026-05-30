@@ -19,6 +19,8 @@ class RegisterLEForm extends Model
     public $login;
     public $password;
 
+    public $passwordRepeat;
+
     public $inn;
     public $snils;
     public $shop_title;
@@ -33,10 +35,13 @@ class RegisterLEForm extends Model
         return [
             [['surname', 'name', 'patronymic', 'login', 'password', 'email', 'phone'], 'required'],
             [['surname', 'name', 'patronymic', 'login', 'password', 'email', 'phone'], 'string', 'max' => 255],
+            [['email'], 'email'],
             [['login'], 'unique', 'targetClass' => User::class],
-            [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, avif, jpeg', 'maxFiles' => 4],
+            [['imageFiles'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, avif, jpeg, pdf', 'maxFiles' => 10],
             [['inn', 'snils', 'shop_title'], 'required'],
             [['inn', 'snils', 'shop_title'], 'string', 'max' => 255],
+            [['passwordRepeat'], 'required'],
+            [['passwordRepeat'], 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
             // [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -52,11 +57,13 @@ class RegisterLEForm extends Model
             'patronymic' => 'Отчество',
             'login' => 'Логин',
             'password' => 'Пароль',
+            'passwordRepeat' => 'Повтор пароля',
             'email' => 'Почтовый адрес',
             'phone' => 'Номер телефона',
             'inn' => 'ИНН',
             'snils' => 'СНИЛС',
             'shop_title' => 'Название магазина',
+            'imageFiles' => 'Документы на торговлю',
         ];
     }
 
@@ -85,23 +92,16 @@ class RegisterLEForm extends Model
 
     public function upload($user)
     {
-        if ($this->imageFiles) {
-            foreach ($this->imageFiles as $file) {
-                $fileName = time() . '_' . Yii::$app->security->generateRandomString() . '.' . $file->extension;
-                $file->saveAs('@app/web/doc/' . $fileName);
-                $userDoc = new UserDoc();
-                $userDoc->user_LE_id = UserLE::geIdtUserLE($user->id);
-                $userDoc->photo = $fileName;
-                if (!$userDoc->save()) {
-                    VarDumper::dump($userDoc->errors, 10, true);
-            die;
-                }
+        foreach ($this->imageFiles as $file) {
+            $fileName = time() . '_' . Yii::$app->security->generateRandomString() . '.' . $file->extension;
+            $file->saveAs('@app/web/doc/' . $fileName);
+            $userDoc = new UserDoc();
+            $userDoc->user_LE_id = UserLE::geIdtUserLE($user->id);
+            $userDoc->photo = $fileName;
+            if (!$userDoc->save()) {
+                return false;
             }
-            return true;
-        } else {
-            VarDumper::dump($this->errors, 10, true);
-            die;
         }
-        return false;
+        return true;
     }
 }

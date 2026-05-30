@@ -11,6 +11,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\VarDumper;
+use yii\web\UploadedFile;
 
 /**
  * SellerCompanyController implements the CRUD actions for Company model.
@@ -72,23 +73,29 @@ class SellerCompanyController extends Controller
     public function actionCreate()
     {
         $model = new CompanyInfo();
+        $company = new Company();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                if ($model->validate()) {
-                    $company = new Company();
-                    $company->user_LE_id = UserLE::geIdtUserLE();
-                    if ($company->save()) {
-                        $model->company_id = $company->id;
-                        if (!$model->save()) {
-                            VarDumper::dump($model->errors, 10, true); die;
-                        }
+
+                // Сначала создаём Company, чтобы получить id
+                $company->user_LE_id = UserLE::geIdtUserLE();
+                $company->docFiles = UploadedFile::getInstancesByName('Company[docFiles]');
+
+                if ($company->save(false)) {
+                    // Теперь у нас есть company_id, присваиваем и сохраняем CompanyInfo
+                    $model->company_id = $company->id;
+
+                    if ($model->save()) {
+                        $company->uploadDocs();
                         return $this->redirect(['view', 'id' => $company->id]);
                     } else {
-                        var_dump($company->errors); die;
+                        // Если CompanyInfo не сохранилась — откатываем Company
+                        $company->delete();
+                        throw new \yii\base\Exception(print_r($model->errors, true));
                     }
                 } else {
-                    var_dump($model->errors); die;
+                    throw new \yii\base\Exception(print_r($company->errors, true));
                 }
             }
         } else {
@@ -97,28 +104,33 @@ class SellerCompanyController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'company' => $company,
         ]);
     }
 
-    /**
-     * Updates an existing Company model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
         $modelInfo = CompanyInfo::findOne(['company_id' => $id]);
 
-        if ($this->request->isPost && $modelInfo->load($this->request->post()) && $modelInfo->save()) {
-            return $this->redirect(['view', 'id' => $modelInfo->company_id]);
+        if ($this->request->isPost) {
+            $model->docFiles = UploadedFile::getInstancesByName('Company[docFiles]');
+
+            if ($modelInfo->load($this->request->post()) && $modelInfo->save()) {
+                $model->uploadDocs();
+
+                // Сбрасываем подтверждение после редактирования
+                $model->approval = 0;
+                $model->save(false);
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
             'modelInfo' => $modelInfo,
+            'company' => $model,
         ]);
     }
 

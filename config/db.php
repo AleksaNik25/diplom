@@ -18,7 +18,7 @@ if (str_contains($_SERVER["SERVER_NAME"], "prof.ru")) {
 }
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yuysdxjd_m4',
+    'dsn' => 'mysql:host=localhost;dbname=yuysdxjd_m3',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',
