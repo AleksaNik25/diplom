@@ -45,9 +45,6 @@ class AccountBasketController extends Controller
         $dataProviderItems = new ActiveDataProvider([
             'query' => BasketItem::find()
                 ->where(['basket_item.basket_id' => $basket?->id ?? 0]),
-            'pagination' => [
-                'pageSize' => 5
-            ],
         ]);
 
         return $this->render('index', [
@@ -74,8 +71,6 @@ class AccountBasketController extends Controller
         $model = Basket::findOne(['user_id' => Yii::$app->user->id]) ?? Basket::create();
         $model->addItem($product_id);
         return $this->asJson(true);
-        // return $this->actionIndex();
-        // return $this->redirect('/account/account-basket');
     }
 
     public function actionDec($item_id)
@@ -83,8 +78,6 @@ class AccountBasketController extends Controller
         $model = Basket::findOne(['user_id' => Yii::$app->user->id]);
         $model->addDec($item_id);
         return $this->asJson(true);
-        // return $this->actionIndex();
-        // return $this->redirect('/account/account-basket');
     }
 
     public function actionDelete($item_id)
@@ -100,8 +93,6 @@ class AccountBasketController extends Controller
             }
         }
         return $this->asJson(true);
-        // return $this->actionIndex();
-        // return $this->redirect('/account/account-basket');
     }
 
     public function actionClear($id)

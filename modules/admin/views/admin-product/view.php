@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p class="d-flex gap-3">
         <?= Html::a('<i class="fas fa-arrow-left"></i>', ['index', 'id' => $model->id], ['class' => 'btn btn-outline-primary']) ?>
 
-        <?= $model->status->alias !== 'on sale'
+        <?= $model->status->alias == 'check'
             ? Html::a('Опубликовать', ['change-status', 'id' => $model->id, 'status' => 'on sale'], ['class' => 'btn btn-outline-success'])
             : ''
         ?>

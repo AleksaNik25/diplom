@@ -40,13 +40,16 @@ $this->title = 'Вход';
                     <div>
                         <?= Html::submitButton('Войти', ['class' => 'btn btn-success', 'name' => 'login-button']) ?>
                     </div>
+                    <div class="pt-3">
+                        Еще нет аккаунта? <?= Html::a('Регистрация', ['site/register'], ['class' => 'text-success text-decoration-none']) ?>
+                    </div>
                 </div>
 
                 <?php ActiveForm::end(); ?>
 
-                <div style="color:#999;">
+                <!-- <div style="color:#999;">
                     Админ: <strong>admin/admin</strong> <br> Пользователь: <strong>ivan/ivan</strong> или <strong>alex/alex</strong> <br> Продавец: <strong>q/q</strong> или <strong>a/a</strong>
-                </div>
+                </div> -->
 
             </div>
         </div>

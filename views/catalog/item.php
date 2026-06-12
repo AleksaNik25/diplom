@@ -20,7 +20,7 @@ $favorits_color = $favorits_id
 
 
 
-<div class="card mt-4 cart-style">
+<div class="card my-4 cart-style">
     <div class="icon-place">
         <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity?->isClient): ?>
             <i
@@ -103,6 +103,12 @@ $favorits_color = $favorits_id
         <?php if (Yii::$app->user->identity?->isClient): ?>
             <?= Html::a('В корзину', ['/account/account-basket/add', 'product_id' => $model->id], [
                 'class' => "btn btn-outline-success w-75 btn-basket-add",
+                'data-pjax' => 0
+            ]) ?>
+        <?php endif ?>
+        <?php if (Yii::$app->user->isGuest): ?>
+            <?= Html::a('В корзину', ['/site/login'], [
+                'class' => "btn btn-outline-success w-75",
                 'data-pjax' => 0
             ]) ?>
         <?php endif ?>

@@ -13,7 +13,6 @@ use yii\widgets\Pjax;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Мои компании';
-$this->params['breadcrumbs'][] = $this->title;
 
 Yii::debug($dataProvider->totalCount);
 ?>
@@ -40,6 +39,7 @@ Yii::debug($dataProvider->totalCount);
             ],
             'itemOptions' => ['class' => 'item'],
             'itemView' => 'item',
+            'summary' => '',
         ]) ?>
     <?php endif ?>
 

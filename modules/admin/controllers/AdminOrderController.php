@@ -62,16 +62,19 @@ class AdminOrderController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
         $dataProviderItems = new ActiveDataProvider([
             'query' => OrderItem::find()
                 ->where(["order_id" => $id]),
         ]);
 
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
             'dataProviderItems' => $dataProviderItems,
             'statuses' => Assist::getColsItems(Status::tableName(), ['title', 'alias']),
             'status_order' => Status::getStatusesAlias(),
+            'order' => $model,
         ]);
     }
 
@@ -113,7 +116,7 @@ class AdminOrderController extends Controller
         if ($this->request->isPost) {
             $model->status_id = $status_id;
             if ($model->save()) {
-                Yii::$app->session->setFlash('warning', 'Статус успешно сменен');
+                Yii::$app->session->setFlash('primary', 'Статус успешно сменен');
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }

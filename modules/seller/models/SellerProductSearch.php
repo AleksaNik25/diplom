@@ -6,18 +6,15 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Product;
 
-/**
- * SellerProductSearch represents the model behind the search form of `app\models\Product`.
- */
 class SellerProductSearch extends Product
 {
-    public $category_id; // Виртуальное поле для фильтрации
+    public $category_id;
 
     public function rules()
     {
         return [
             [['id', 'user_id', 'status_id'], 'integer'],
-            [['category_id'], 'integer'], // Добавлено
+            [['category_id'], 'integer'],
             [['title', 'preview', 'care_recommendations', 'price'], 'safe'],
         ];
     }
@@ -29,8 +26,7 @@ class SellerProductSearch extends Product
 
     public function search($params)
     {
-        // distinct() обязателен при фильтрации через Many-to-Many, чтобы не дублировать товары
-        $query = Product::find()->distinct();
+        $query = Product::find()->alias('product')->distinct();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -41,14 +37,9 @@ class SellerProductSearch extends Product
             return $dataProvider;
         }
 
-        // Подключаем связь categories для фильтрации, но без жадной загрузки (false)
-        $query->joinWith(['categories' => function ($q) {
-            $q->onCondition(['category.id' => $this->category_id]);
-        }], false);
-
         $query->andFilterWhere([
-            'product.id' => $this->id,
-            'product.user_id' => $this->user_id,
+            'product.id'        => $this->id,
+            'product.user_id'   => $this->user_id,
             'product.status_id' => $this->status_id,
         ]);
 
@@ -56,6 +47,13 @@ class SellerProductSearch extends Product
             ->andFilterWhere(['like', 'product.preview', $this->preview])
             ->andFilterWhere(['like', 'product.care_recommendations', $this->care_recommendations])
             ->andFilterWhere(['like', 'product.price', $this->price]);
+
+        if ($this->category_id) {
+            $query->innerJoin(
+                'product_category pc',
+                'pc.product_id = product.id'
+            )->andWhere(['pc.category_id' => $this->category_id]);
+        }
 
         return $dataProvider;
     }

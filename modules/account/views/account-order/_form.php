@@ -18,6 +18,9 @@ use yii\widgets\ListView;
 </div>
 
 <div class="order-form mt-3">
+
+    <h3 class="text-center py-2">Данные получателя</h3>
+
     <?php $form = ActiveForm::begin(['action' => ['create', 'basket_id' => $basket->id]]); ?>
 
     <div class="row g-3">
@@ -57,7 +60,7 @@ use yii\widgets\ListView;
         'pager' => [
             'class' => LinkPager::class
         ],
-        'summary' => ''
+        'summary' => '',
     ]) ?>
 
     <div class="border-white border-top border-2 py-3 order-total fw-bold fs-3">
@@ -73,7 +76,7 @@ use yii\widgets\ListView;
             <div class="col-2 offset-5 text-end">
                 <?= Yii::$app->formatter->asDecimal($basket->sum, 2) ?> ₽
                 <div class="text-end mt-3">
-                    <?= Html::submitButton('Оформить заказ', ['class' => 'btn btn-success']) ?>
+                    <?= Html::submitButton('Подтвердить заказ', ['class' => 'btn btn-success']) ?>
                 </div>
             </div>
         </div>

@@ -83,7 +83,7 @@ class AdminCategoryController extends Controller
 
         if ($this->request->isPost) {
             $model->parent_id = null;
-            $model->extend    = null;
+            $model->extend = null;
 
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['index']);
@@ -103,21 +103,19 @@ class AdminCategoryController extends Controller
      */
     public function actionCreateSub()
     {
-        $model         = new Category();
+        $model = new Category();
         $subcategories = [new Category()];
 
         if ($this->request->isPost) {
             $post = $this->request->post();
             $subcategoryData = $post['Subcategory'] ?? [];
 
-            // parent_id передаётся отдельным ключом Subcategory[parent_id]
             $parentId = $subcategoryData['parent_id'] ?? null;
             $model->parent_id = $parentId;
 
             $saved = [];
 
             foreach ($subcategoryData as $key => $item) {
-                // пропускаем служебный ключ parent_id
                 if ($key === 'parent_id') continue;
 
                 $title = trim($item['title'] ?? '');
@@ -139,11 +137,10 @@ class AdminCategoryController extends Controller
                 return $this->redirect(['index']);
             }
 
-            // если ничего не сохранилось — вернуть форму с введёнными данными
             $subcategories = array_values(array_map(function ($item) use ($parentId) {
                 $s = new Category();
-                $s->title     = $item['title'] ?? '';
-                $s->extend    = !empty($item['extend']) ? 1 : null;
+                $s->title = $item['title'] ?? '';
+                $s->extend = !empty($item['extend']) ? 1 : null;
                 $s->parent_id = $parentId;
                 return $s;
             }, array_filter($subcategoryData, fn($k) => $k !== 'parent_id', ARRAY_FILTER_USE_KEY)));

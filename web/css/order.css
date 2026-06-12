@@ -151,3 +151,47 @@
   padding: 3px;
   border-radius: 150px;
 }
+
+
+.detail-view-container {
+  padding: 2px;
+  width: 1100px;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 0.1rem 1rem 0.2rem rgba(0, 0, 0, 0.15);
+}
+
+.detail-view {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.detail-view th,
+.detail-view td {
+  padding: 1rem;
+  
+  border-bottom: 1px solid #303030;
+  vertical-align: top;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail-view th {
+  width: 50%;
+  font-weight: 600;
+  color: #303030;
+  /* background-color: rgb(255, 255, 255); */
+}
+
+.detail-view td {
+  width: 50%;
+  /* background-color: rgb(255, 255, 255); */
+  color: #303030;
+}
+
+.detail-view tr:last-child th,
+.detail-view tr:last-child td {
+  border-bottom: none;
+}

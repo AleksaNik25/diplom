@@ -12,7 +12,6 @@ use yii\widgets\Pjax;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Избранные товары';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="favorits-index">
 
@@ -38,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'itemOptions' => ['class' => 'item'],
             'itemView' => 'item',
+            'summary' => '',
         ]) ?>
 
     <?php else: ?>

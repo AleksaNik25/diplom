@@ -25,9 +25,8 @@ $rootList = ArrayHelper::map(
 
 	<?php $form = ActiveForm::begin(['id' => 'form-category']); ?>
 
-	<!-- Корневая категория -->
 	<div class="col-6 mb-3">
-		<label class="form-label fw-bold">Корневая категория <span class="text-danger">*</span></label>
+		<label class="form-label fw-bold">Категория</label>
 		<select name="Subcategory[parent_id]" id="root-select" class="form-select" required>
 			<option value="">Выберите категорию</option>
 			<?php foreach ($rootList as $id => $title): ?>

@@ -11,13 +11,13 @@ use app\models\Product;
  */
 class AdminProductSearch extends Product
 {
-    public $category_id; // Виртуальное поле для фильтрации
+    public $category_id; 
 
     public function rules()
     {
         return [
             [['id', 'user_id', 'status_id'], 'integer'],
-            [['category_id'], 'integer'], // Добавлено
+            [['category_id'], 'integer'], 
             [['title', 'preview', 'care_recommendations', 'price'], 'safe'],
         ];
     }
@@ -29,8 +29,7 @@ class AdminProductSearch extends Product
 
     public function search($params)
     {
-        // distinct() обязателен при фильтрации через Many-to-Many, чтобы не дублировать товары
-        $query = Product::find()->distinct();
+        $query = Product::find()->alias('product')->distinct();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -41,7 +40,6 @@ class AdminProductSearch extends Product
             return $dataProvider;
         }
 
-        // Подключаем связь categories для фильтрации, но без жадной загрузки (false)
         $query->joinWith(['categories' => function ($q) {
             $q->onCondition(['category.id' => $this->category_id]);
         }], false);
@@ -56,6 +54,13 @@ class AdminProductSearch extends Product
             ->andFilterWhere(['like', 'product.preview', $this->preview])
             ->andFilterWhere(['like', 'product.care_recommendations', $this->care_recommendations])
             ->andFilterWhere(['like', 'product.price', $this->price]);
+
+        if ($this->category_id) {
+            $query->innerJoin(
+                'product_category pc',
+                'pc.product_id = product.id'
+            )->andWhere(['pc.category_id' => $this->category_id]);
+        }
 
         return $dataProvider;
     }

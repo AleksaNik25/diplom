@@ -195,12 +195,10 @@ class AccountCommentController extends Controller
         $product_id = $model->product_id;
         $currentUser = Yii::$app->user->identity;
 
-        // Проверка прав: удалять может автор или администратор
         if ($model->user_id !== $currentUser->id && !$currentUser->isAdmin) {
             throw new \yii\web\ForbiddenHttpException('Нет доступа.');
         }
 
-        // Рейтинг удаляем только при удалении корневого отзыва
         if (!$model->parent_id) {
             Rating::deleteAll([
                 'user_id' => $model->user_id,

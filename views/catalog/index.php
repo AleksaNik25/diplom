@@ -39,7 +39,7 @@ $this->title = 'Каталог';
     <?= ListView::widget([
         'dataProvider' => $dataProvider,
         'layout' => "{summary}\n<div class=\"d-flex justify-content-around flex-wrap gap-2\">{items}</div>\n{pager}",
-
+        'summary' => '',
         'pager' => [
             'class' => LinkPager::class,
         ],

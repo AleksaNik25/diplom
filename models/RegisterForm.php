@@ -29,6 +29,12 @@ class RegisterForm extends Model
             [['surname', 'name', 'login', 'password', 'email', 'phone'], 'required'],
             [['surname', 'name', 'patronymic', 'login', 'password', 'email', 'phone'], 'string', 'max' => 255],
             [['email'], 'email'],
+
+            [['surname', 'name', 'patronymic'], 'match', 'pattern' => '/^[а-яё\s]+$/iu', 'message' => 'Поле должно содержать символы кириллицы'],
+            [['password'], 'string', 'min' => 8],
+            [['login'], 'string', 'min' => 6],
+            [['login'], 'match', 'pattern' => '/^[a-z\d]+$/i', 'message' => 'Значение «Логин» должно содержать символы латиницы и цифры'],
+
             [['login'], 'unique', 'targetClass' => User::class],
             [['passwordRepeat'], 'required'],
             [['passwordRepeat'], 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],

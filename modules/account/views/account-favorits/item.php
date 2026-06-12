@@ -19,7 +19,7 @@ $favorits_color = "text-danger";
 
 
 
-<div class="card mt-3 cart-style">
+<div class="card my-4 cart-style">
     <div class="img-cart-style">
         <?= Html::a(
             Carousel::widget([
@@ -69,12 +69,36 @@ $favorits_color = "text-danger";
             <div>
                 <p class="card-text"><?= $model->product->price ?><span> ₽</span>
             </div>
+
+            <div class="d-flex justify-content-center mt-2">
+                <?php $avgRating = $model->product->getAverageRating(); ?>
+                <?php if ($avgRating > 0): ?>
+                    <div class="product-rating-container-style mb-3">
+                        <div class="product-rating-style d-flex">
+                            <span class="me-1"><?= number_format($avgRating, 1) ?></span>
+                            <?= StarRating::widget([
+                                'bsVersion' => '5.x',
+                                'name' => 'product-rating-style' . $model->id,
+                                'value' => $avgRating,
+                                'pluginOptions' => [
+                                    'size' => 'xs',
+                                    'readonly' => true,
+                                    'showClear' => false,
+                                    'showCaption' => false,
+                                    'hoverEnabled' => false,
+                                    'displayOnly' => true
+                                ]
+                            ]) ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
     <div class="m-2 d-flex justify-content-center pb-3">
         <?php if (Yii::$app->user->identity?->isClient): ?>
-            <?= Html::a('В корзину', ['/account/account-basket/add', 'product_id' => $model->id], [
+            <?= Html::a('В корзину', ['/account/account-basket/add', 'product_id' => $model->product->id], [
                 'class' => "btn btn-outline-success w-75 btn-basket-add",
                 'data-pjax' => 0
             ]) ?>

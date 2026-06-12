@@ -4,7 +4,7 @@
 if (str_contains($_SERVER["SERVER_NAME"], "prof.ru")) {
     return [
         'class' => 'yii\db\Connection',
-        'dsn' => 'mysql:host=localhost;dbname=yuysdxjd_m3',
+        'dsn' => 'mysql:host=localhost;dbname=vershki-and-koreshki',
         'username' => 'yuysdxjd',
         'password' => 'mf9iXd',
         'charset' => 'utf8',
@@ -18,7 +18,7 @@ if (str_contains($_SERVER["SERVER_NAME"], "prof.ru")) {
 }
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yuysdxjd_m3',
+    'dsn' => 'mysql:host=localhost;dbname=vershki-and-koreshki',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',

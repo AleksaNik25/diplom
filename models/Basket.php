@@ -83,19 +83,26 @@ class Basket extends \yii\db\ActiveRecord
     public function addItem($product_id)
     {
         $item = BasketItem::findOne(['basket_id' => $this->id, 'product_id' => $product_id]);
+
         if (!$item) {
+            $product = \app\models\Product::findOne($product_id);
+
+            if (!$product) {
+                throw new \yii\web\NotFoundHttpException('Товар не найден.');
+            }
+
             $item = new BasketItem();
             $item->basket_id = $this->id;
             $item->product_id = $product_id;
-            $item->price = $item->product->price;
+            $item->price = $product->price; 
         }
-        // изиеняем item корзины
+
         $item->amount++;
         $item->sum += $item->price;
         $item->save();
-        // изиеняем корзину
+
         $this->amount++;
-        $this->sum += $item->product->price;
+        $this->sum += $item->price;
         $this->save();
     }
 

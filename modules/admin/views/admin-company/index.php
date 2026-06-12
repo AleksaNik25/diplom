@@ -1,11 +1,7 @@
 <?php
 
-use app\models\Company;
-use yii\bootstrap5\LinkPager;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\grid\ActionColumn;
-use yii\widgets\ListView;
+use yii\grid\GridView;
 use yii\widgets\Pjax;
 
 /** @var yii\web\View $this */
@@ -13,7 +9,6 @@ use yii\widgets\Pjax;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Компании';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-index">
 
@@ -26,14 +21,61 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::begin(); ?>
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= ListView::widget([
+    <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'layout' => "{summary}\n<div class=\"d-flex justify-content-around flex-wrap gap-2\">{items}</div>\n{pager}",
-        'pager' => [
-            'class' => LinkPager::class,
+        'summary' => '',
+        'columns' => [
+            [
+                'label' => 'Наименование',
+                'value' => fn($model) => $model->companyInfo->title,
+            ],
+            [
+                'label' => 'Контактное лицо',
+                'value' => fn($model) => $model->companyInfo->person,
+            ],
+            [
+                'label' => 'ИНН',
+                'value' => fn($model) => $model->companyInfo->inn,
+            ],
+            [
+                'label' => 'Юридический адрес',
+                'value' => fn($model) => $model->companyInfo->address,
+            ],
+            [
+                'label' => 'Email',
+                'value' => fn($model) => $model->companyInfo->email,
+            ],
+            [
+                'label' => 'Статус',
+                'value' => fn($model) => $model->approval == 1
+                    ? 'Подтверждена'
+                    : 'Ожидает подтверждения',
+            ],
+            [
+                'class'    => 'yii\grid\ActionColumn',
+                'template' => '{view} {approve}',
+                'buttons'  => [
+                    'view' => fn($url, $model) => Html::a(
+                        '<i class="fas fa-eye"></i>',
+                        ['view', 'id' => $model->id],
+                        ['class' => 'btn btn-sm btn-outline-success']
+                    ),
+                    'approve' => fn($url, $model) => $model->approval != 1
+                        ? Html::a(
+                            '<i class="fas fa-check"></i>',
+                            ['approve', 'id' => $model->id],
+                            [
+                                'class' => 'btn btn-sm btn-outline-primary',
+                                'data'  => [
+                                    'confirm' => 'Подтвердить компанию?',
+                                    'method'  => 'post',
+                                ],
+                            ]
+                        )
+                        : '',
+                ],
+            ],
         ],
-        'itemOptions' => ['class' => 'item'],
-        'itemView' => 'item',
     ]) ?>
 
     <?php Pjax::end(); ?>

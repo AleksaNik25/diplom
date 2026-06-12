@@ -66,24 +66,7 @@ class CatalogController extends Controller
     {
         $searchModel = new CatalogSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
-        // $dataProvider = new ActiveDataProvider([
-        //     'query' =>
-            
-        //     Product::find()->where(['status_id' => Status::getStatusId('on sale')]),
-
-        //     'pagination' => [
-        //         'pageSize' => 24
-        //     ],
-        //     /*
-        //     'sort' => [
-        //         'defaultOrder' => [
-        //             'id' => SORT_DESC,
-        //         ]
-        //     ],
-        //     */
-        // ]);
-        
+    
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -119,8 +102,6 @@ class CatalogController extends Controller
             ->where(['user_id' => Yii::$app->user->id, 'product_id' => $id])
             ->select('estimation')
             ->scalar();
-
-            // VarDumper::dump($this->stars, 10, true); die;
 
         $stars = $stars ? (float)$stars : 0;
 

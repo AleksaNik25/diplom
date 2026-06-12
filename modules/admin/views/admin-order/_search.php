@@ -22,7 +22,8 @@ use yii\bootstrap5\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'user_id') ?>
+    <?php // echo $form->field($model, 'user_id') 
+    ?>
 
     <?= $form->field($model, 'created_at') ?>
 

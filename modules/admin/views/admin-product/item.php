@@ -49,7 +49,7 @@ $viewUrl = Url::to(['view', 'id' => $model->id]);
             </div>
         </div>
         <div class="mt-3 d-flex gap-2 justify-content-center">
-            <?= $model->status->alias !== 'on sale'
+            <?= $model->status->alias == 'check'
                 ? Html::a('Опубликовать', ['change-status', 'id' => $model->id, 'status' => 'on sale'], ['class' => 'btn btn-success'])
                 : ''
             ?>

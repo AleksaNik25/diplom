@@ -11,7 +11,6 @@ use yii\widgets\Pjax;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Отзыв на товар';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="comment-index">
 

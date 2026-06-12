@@ -61,7 +61,7 @@ if ($model->category_id) {
             <div class="d-flex gap-4">
                 <?php foreach ($roots as $root): ?>
                     <?php $subs = $subcatsByRoot[$root->id] ?? [] ?>
-                    <div style="min-width: 250px;">
+                    <div style="min-width: 250px; border-right: 1px solid #3A7F0C;">
 
                         <div class="fw-bold mb-2 category-option"
                             style="cursor:pointer;"
@@ -85,17 +85,6 @@ if ($model->category_id) {
                     </div>
                 <?php endforeach ?>
             </div>
-
-            <?php if ($model->category_id): ?>
-                <div class="mt-2 pt-2 border-top">
-                    <span class="category-option text-danger small"
-                        style="cursor:pointer;"
-                        data-id=""
-                        data-label="Выберите категорию товара">
-                        <i class="fas fa-times me-1"></i>Сбросить фильтр
-                    </span>
-                </div>
-            <?php endif ?>
         </div>
     </div>
 

@@ -23,23 +23,28 @@ $this->title = 'Регистрация продавца';
                     'options' => ['enctype' => 'multipart/form-data'],
                 ]); ?>
 
-                <?= $form->field($model, 'surname')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'surname')->textInput(['autofocus' => true, 'placeholder' => 'Иванов']) ?>
 
-                <?= $form->field($model, 'name') ?>
+                <?= $form->field($model, 'name')->textInput(['placeholder' => 'Иван']) ?>
 
-                <?= $form->field($model, 'patronymic') ?>
+                <?= $form->field($model, 'patronymic')->textInput(['placeholder' => 'Иванович']) ?>
 
-                <?= $form->field($model, 'email') ?>
+                <?= $form->field($model, 'email')->textInput(['placeholder' => 'ivanov@mail.ru']) ?>
 
-                <?= $form->field($model, 'phone') ?>
+                <?= $form->field($model, 'phone')->widget(\yii\widgets\MaskedInput::class, [
+                    'mask' => '+7(999)-999-99-99',
+                    'options' => [
+                        'placeholder' => '+7(999)-999-99-99',
+                    ],
+                ])  ?>
 
-                <?= $form->field($model, 'inn') ?>
+                <?= $form->field($model, 'inn')->textInput(['placeholder' => '123456789123']) ?>
 
-                <?= $form->field($model, 'snils') ?>
+                <?= $form->field($model, 'snils')->textInput(['placeholder' => '123-456-789 10']) ?>
 
-                <?= $form->field($model, 'shop_title') ?>
+                <?= $form->field($model, 'shop_title')->textInput(['placeholder' => 'FlowerStor']) ?>
 
-                <?= $form->field($model, 'login') ?>
+                <?= $form->field($model, 'login')->textInput(['placeholder' => 'IvanovIvan']) ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 

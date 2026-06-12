@@ -32,11 +32,22 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <body class="d-flex flex-column min-vh-100">
     <?php $this->beginBody() ?>
 
+    <div class="deco-leaves" aria-hidden="true">
+        <i class="fas fa-leaf deco-leaf deco-leaf--1"></i>
+        <i class="fas fa-leaf deco-leaf deco-leaf--2"></i>
+        <i class="fas fa-leaf deco-leaf deco-leaf--3"></i>
+        <i class="fas fa-leaf deco-leaf deco-leaf--4"></i>
+        <i class="fas fa-leaf deco-leaf deco-leaf--5"></i>
+        <i class="fas fa-leaf deco-leaf deco-leaf--6"></i>
+        <i class="fas fa-leaf deco-leaf deco-leaf--7"></i>
+        <i class="fas fa-leaf deco-leaf deco-leaf--8"></i>
+    </div>
+
     <header id="header" class="mb-4">
         <?php
         NavBar::begin([
-            'brandLabel' => ' Вершки и корешки',
-            // <img class="logo" src="../web/img/logo.svg" alt="logo">
+            'brandLabel' => '<img class="logo" src="../web/img/logo.svg" alt="logo">',
+
             'brandUrl' => Yii::$app->homeUrl,
             'options' => ['class' => 'navbar-expand-md navbar bg fixed-top']
         ]);
@@ -45,8 +56,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="d-flex flex-grow-1 justify-content-center navbar-nav">
                 <div class="d-flex align-items-center gap-4">
-                    <?php # Html::a('Главная', ['/site/index'], ['class' => 'navigation-style']) 
-                    ?>
                     <?= Html::a('Каталог', ['/catalog'], ['class' => 'navigation-style']) ?>
 
                     <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity?->isAdmin): ?>
@@ -106,6 +115,13 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <footer id="footer" class="mt-5" style=" left: 0; bottom: 40px; width: 100%; z-index: 1030;">
         <div class="container py-4">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 mb-4">
+                <!-- <div>
+                    <img class="logo" src="../web/img/logo-footer.svg" alt="logo">
+                    <p class="d-flex flex-wrap">
+                        Маркетплейс растений от проверенных продавцов. Найди своё идеальное растение и создай уголок природы дома.
+                    </p>
+                </div> -->
+
                 <nav class="footer-nav d-flex flex-wrap gap-4">
                     <?= Html::a('Главная', ['/site/index'], ['class' => 'footer-link']) ?>
                     <?= Html::a('Каталог', ['/catalog'], ['class' => 'footer-link']) ?>
@@ -122,7 +138,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 </div>
             </div>
 
-            <div class="footer-copyright text-center">&copy; Вершки и корешки <?= date('Y') ?> <br> Все права защищены</div>
+            <div class="footer-copyright text-center">&copy; Вершки и корешки <?= date('Y') ?> ✦ Все права защищены</div>
         </div>
     </footer>
 

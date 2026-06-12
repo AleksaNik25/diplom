@@ -49,6 +49,7 @@ $this->title = 'Личный кабинет';
             'pager' => [
                 'class' => LinkPager::class
             ],
+            'summary' => '',
         ]) ?>
 
     <?php else: ?>

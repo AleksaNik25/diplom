@@ -134,14 +134,12 @@ class SellerProductController extends Controller
                 $model->status_id = Status::getStatusId('check');
                 $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
 
-                // проверка наличия фото при создании
                 if (empty($model->imageFiles)) {
                     $model->addError('imageFiles', 'Необходимо загрузить хотя бы одно фото товара.');
                     return $this->render('create', ['model' => $model]);
                 }
 
                 if ($model->save()) {
-                    // Сохраняем подкатегории через product_category
                     $categoryIds = $this->request->post('category_ids', []);
                     $model->saveCategories($categoryIds);
 
@@ -166,7 +164,6 @@ class SellerProductController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            // 'category' => $category,
         ]);
     }
 

@@ -8,7 +8,6 @@ use yii\helpers\Url;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Категории';
-$this->params['breadcrumbs'][] = $this->title;
 
 // Загружаем всю иерархию одним запросом
 $allCategories = Category::find()->orderBy(['parent_id' => SORT_ASC, 'id' => SORT_ASC])->all();

@@ -53,8 +53,13 @@ $this->title = 'Мои товары';
         ],
         'itemOptions' => ['class' => 'item'],
         'itemView' => 'item',
+        'summary' => '',
     ]) ?>
 
     <?php Pjax::end(); ?>
 
 </div>
+
+<?php
+$this->registerJsFile('/js/catalog.js', ['depends' => 'yii\web\YiiAsset']);
+?>

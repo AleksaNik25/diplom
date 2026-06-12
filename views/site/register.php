@@ -20,17 +20,22 @@ $this->title = 'Регистрация';
 
                 <?php $form = ActiveForm::begin(['id' => 'contact-form']); ?>
 
-                <?= $form->field($model, 'surname')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'surname')->textInput(['autofocus' => true, 'placeholder' => 'Иванов']) ?>
 
-                <?= $form->field($model, 'name') ?>
+                <?= $form->field($model, 'name')->textInput(['placeholder' => 'Иван']) ?>
 
-                <?= $form->field($model, 'patronymic') ?>
+                <?= $form->field($model, 'patronymic')->textInput(['placeholder' => 'Иванович']) ?>
 
-                <?= $form->field($model, 'email') ?>
+                <?= $form->field($model, 'email')->textInput(['placeholder' => 'ivanov@mail.ru']) ?>
 
-                <?= $form->field($model, 'phone') ?>
+                <?= $form->field($model, 'phone')->widget(\yii\widgets\MaskedInput::class, [
+                    'mask' => '+7(999)-999-99-99',
+                    'options' => [
+                        'placeholder' => '+7(999)-999-99-99',
+                    ],
+                ])  ?>
 
-                <?= $form->field($model, 'login') ?>
+                <?= $form->field($model, 'login')->textInput(['placeholder' => 'IvanovIvan']) ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
@@ -38,6 +43,10 @@ $this->title = 'Регистрация';
 
                 <div class="form-group pt-3 text-center">
                     <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-success', 'name' => 'contact-button']) ?>
+                </div>
+
+                <div class="form-group pt-3 text-center">
+                    Уже есть аккаунт? <?= Html::a('Войти', ['site/login'], ['class' => 'text-success text-decoration-none']) ?>
                 </div>
 
                 <div class="pt-3 pb-3 text-center">

@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php elseif ($model->userLE->approval == 1): ?>
                 <?= Html::a('Заблокировать', ['change-status', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
             <?php elseif ($model->userLE->approval == 2): ?>
-                <span class="badge bg-danger align-self-center">Заблокирован</span>
                 <?= Html::a('Разблокировать', ['change-status', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?php endif; ?>
         <?php endif; ?>
@@ -77,7 +76,11 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'approval',
                 'label' => 'Статус',
-                'value' => $model->userLE->approval == 1 ? 'Подтвержден' : 'Ожидает подтверждения',
+                'value' => fn($model) => match ($model->userLE->approval) {
+                    1 => 'Подтверждён',
+                    2 => 'Заблокирован',
+                    default => 'Ожидает подтверждения',
+                },
             ],
         ],
     ]) ?>

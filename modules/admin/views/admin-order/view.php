@@ -35,30 +35,46 @@ $status_col = str_replace(' ', '-', $statuses[$model->status_id]['alias']);
         } ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            [
-                'attribute' => 'user_id',
-                'value' => $model->user->id,
+    <div class="text-black detail-view-container">
+        <?= DetailView::widget([
+            'options' => ['class' => 'detail-view table-borderless'],
+            'model' => $model,
+            'attributes' => [
+                'id',
+                [
+                    'attribute' => 'created_at',
+                    'value' => $time_order,
+                ],
+                'amount',
+                'sum',
+                'address',
+                'phone',
+                [
+                    'attribute' => 'date',
+                    'value'     => Yii::$app->formatter->asDate($model->date, 'php:d.m.Y'),
+                ],
+                [
+                    'attribute' => 'time',
+                    'value'     => Yii::$app->formatter->asTime($model->time, 'php:H:i'),
+                ],
+                [
+                    'attribute' => 'pay_type_id',
+                    'value'     => $model->payType->title ?? '—',
+                ],
+                [
+                    'attribute' => 'status_id',
+                    'format' => 'html',
+                    'value' => "<span class=\"order-status order-{$status_col}\">" . $model->status->title
+                ],
             ],
-            [
-                'attribute' => 'created_at',
-                'value' => $time_order,
-            ],
-            'amount',
-            'sum',
-            [
-                'attribute' => 'status_id',
-                'format' => 'html',
-                'value' => "<span class=\"order-status order-{$status_col}\">" . $model->status->title
-            ],
-        ],
+        ]) ?>
+    </div>
+
+    <h3 class="text-center mt-5 mb-0">Cостав заказа</h3>
+
+    <?= $this->render('view-order-items', [
+        'dataProviderItems' => $dataProviderItems,
+        'order' => $order
     ]) ?>
-
-    <h3>Cостав заказа</h3>
-
-    <?= $this->render('view-order-items', ['dataProviderItems' => $dataProviderItems]) ?>
 
 </div>

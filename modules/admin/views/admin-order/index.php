@@ -49,6 +49,7 @@ $this->title = 'Управление заказами';
     <?php Pjax::begin(); ?>
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
+
     <?= ListView::widget([
         'dataProvider' => $dataProvider,
         'itemOptions' => ['class' => 'item'],
@@ -60,6 +61,7 @@ $this->title = 'Управление заказами';
         'pager' => [
             'class' => LinkPager::class
         ],
+        'summary' => '',
     ]) ?>
 
     <?php Pjax::end(); ?>

@@ -1,10 +1,11 @@
 .logo {
-    width: 40px;
-    height: auto;
+    height: 60px;
+    width: auto;
 }
 
 .bg {
-    background-color: rgb(239, 242, 190);
+    background-color: #F1F4CA;
+    /* #ECF0BA */
 }
 
 .navigation-style {
@@ -105,6 +106,128 @@
 .footer-contact-link:hover {
     color: #ffffff;
 }
+
+/* падающие лсточки */
+.deco-leaves {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.deco-leaf {
+    position: absolute;
+    top: -60px;
+    opacity: 0;
+    animation: leafFall linear infinite;
+}
+
+.deco-leaf--1 {
+    left: 6%;
+    font-size: 1.8rem;
+    color: #3A7F0C;
+    animation-duration: 10s;
+    animation-delay: 0s;
+    --sx: 40px;
+    --r: 180deg;
+}
+
+.deco-leaf--2 {
+    left: 11%;
+    font-size: 1.3rem;
+    color: #77A41C;
+    animation-duration: 13s;
+    animation-delay: 3s;
+    --sx: -30px;
+    --r: 240deg;
+}
+
+.deco-leaf--3 {
+    left: 8%;
+    font-size: 2.1rem;
+    color: #1A3306;
+    animation-duration: 16s;
+    animation-delay: 7s;
+    --sx: 50px;
+    --r: 150deg;
+}
+
+.deco-leaf--4 {
+    left: 14%;
+    font-size: 1.1rem;
+    color: #3A7F0C;
+    animation-duration: 11s;
+    animation-delay: 11s;
+    --sx: -20px;
+    --r: 200deg;
+}
+
+
+.deco-leaf--5 {
+    right: 6%;
+    font-size: 2rem;
+    color: #77A41C;
+    animation-duration: 12s;
+    animation-delay: 1.5s;
+    --sx: -45px;
+    --r: -180deg;
+}
+
+.deco-leaf--6 {
+    right: 11%;
+    font-size: 1.4rem;
+    color: #3A7F0C;
+    animation-duration: 9s;
+    animation-delay: 5s;
+    --sx: 25px;
+    --r: -220deg;
+}
+
+.deco-leaf--7 {
+    right: 8%;
+    font-size: 1.9rem;
+    color: #1A3306;
+    animation-duration: 14s;
+    animation-delay: 9s;
+    --sx: -55px;
+    --r: -160deg;
+}
+
+.deco-leaf--8 {
+    right: 14%;
+    font-size: 1.2rem;
+    color: #77A41C;
+    animation-duration: 11s;
+    animation-delay: 13s;
+    --sx: 30px;
+    --r: -200deg;
+}
+
+@keyframes leafFall {
+    0% {
+        opacity: 0;
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    8% {
+        opacity: 0.15;
+    }
+
+    50% {
+        transform: translateY(50vh) translateX(var(--sx, 30px)) rotate(calc(var(--r, 180deg) * 0.5));
+    }
+
+    92% {
+        opacity: 0.15;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(105vh) translateX(0) rotate(var(--r, 180deg));
+    }
+}
+
 
 @media (max-width: 768px) {
     .d-flex.flex-wrap {

@@ -33,9 +33,15 @@ class RegisterLEForm extends Model
     public function rules()
     {
         return [
-            [['surname', 'name', 'patronymic', 'login', 'password', 'email', 'phone'], 'required'],
+            [['surname', 'name', 'login', 'password', 'email', 'phone'], 'required'],
             [['surname', 'name', 'patronymic', 'login', 'password', 'email', 'phone'], 'string', 'max' => 255],
             [['email'], 'email'],
+
+            [['surname', 'name', 'patronymic'], 'match', 'pattern' => '/^[а-яё\s]+$/iu', 'message' => 'Поле должно содержать символы кириллицы'],
+            [['password'], 'string', 'min' => 8],
+            [['login'], 'string', 'min' => 6],
+            [['login'], 'match', 'pattern' => '/^[a-z\d]+$/i', 'message' => 'Значение «Логин» должно содержать символы латиницы и цифры'],
+
             [['login'], 'unique', 'targetClass' => User::class],
             [['imageFiles'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, avif, jpeg, pdf', 'maxFiles' => 10],
             [['inn', 'snils', 'shop_title'], 'required'],

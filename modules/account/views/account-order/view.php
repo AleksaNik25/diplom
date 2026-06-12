@@ -24,39 +24,42 @@ $this->title = "Заказ №" . $model->id;
         <?= Html::a('К заказам', ['index'], ['class' => 'btn btn-outline-primary']) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            [
-                'attribute' => 'created_at',
-                'value' => $time_order,
+    <div class="text-black detail-view-container">
+        <?= DetailView::widget([
+            'options' => ['class' => 'detail-view table-borderless'],
+            'model' => $model,
+            'attributes' => [
+                'id',
+                [
+                    'attribute' => 'created_at',
+                    'value' => $time_order,
+                ],
+                'amount',
+                'sum',
+                'address',
+                'phone',
+                [
+                    'attribute' => 'date',
+                    'value'     => Yii::$app->formatter->asDate($model->date, 'php:d.m.Y'),
+                ],
+                [
+                    'attribute' => 'time',
+                    'value'     => Yii::$app->formatter->asTime($model->time, 'php:H:i'),
+                ],
+                [
+                    'attribute' => 'pay_type_id',
+                    'value'     => $model->payType->title ?? '—',
+                ],
+                [
+                    'attribute' => 'status_id',
+                    'format' => 'html',
+                    'value' => "<span class=\"order-status order-{$status_col}\">" . $model->status->title
+                ],
             ],
-            'amount',
-            'sum',
-            'address',
-            'phone',
-            [
-                'attribute' => 'date',
-                'value'     => Yii::$app->formatter->asDate($model->date, 'php:d.m.Y'),
-            ],
-            [
-                'attribute' => 'time',
-                'value'     => Yii::$app->formatter->asTime($model->time, 'php:H:i'),
-            ],
-            [
-                'attribute' => 'pay_type_id',
-                'value'     => $model->payType->title ?? '—',
-            ],
-            [
-                'attribute' => 'status_id',
-                'format' => 'html',
-                'value' => "<span class=\"order-status order-{$status_col}\">" . $model->status->title
-            ],
-        ],
-    ]) ?>
+        ]) ?>
+    </div>
 
-    <h3>Cостав заказа</h3>
+    <h3 class="text-center mt-5 mb-0">Cостав заказа</h3>
 
     <?= $this->render('view-order-items', ['dataProviderItems' => $dataProviderItems, 'order' => $model,]) ?>
 

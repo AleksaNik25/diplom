@@ -110,6 +110,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             'id' => 'btn-add-to-cart',
                         ]) ?>
                     <?php endif ?>
+                    <?php if (Yii::$app->user->isGuest): ?>
+                        <?= Html::a('В корзину', ['/site/login'], [
+                            'class' => "px-4 fs-5 btn btn-primary",
+                        ]) ?>
+                    <?php endif ?>
                 </div>
             </div>
         </div>

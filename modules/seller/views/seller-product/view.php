@@ -67,10 +67,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <h1><?= Html::encode($this->title) ?></h1>
 
-                <p class="product-preview lead">
-                    <?= $model->preview ?>
-                </p>
-
                 <div class="product-category lead mb-3">
                     <?php
                     $cats = $model->categories;
@@ -90,14 +86,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php endif ?>
                     <?php if (!empty($extended)): ?>
                         <div class="mb-1">
-                            <span class="text-secondary">
+                            <span class="text-success">
                                 <?= Html::encode(implode(' ✦ ', \yii\helpers\ArrayHelper::getColumn($extended, 'title'))) ?>
                             </span>
                         </div>
                     <?php endif ?>
                 </div>
 
-                <div class="product-price h2 mb-3">
+                <p class="product-preview lead">
+                    <?= $model->preview ?>
+                </p>
+
+                <div class="product-price fw-bold my-3">
                     <?= Yii::$app->formatter->asDecimal($model->price, 2) ?> ₽
                 </div>
             </div>

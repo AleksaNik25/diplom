@@ -107,7 +107,6 @@ class AdminUserController extends Controller
 
         $userLE = $user->userLE;
 
-        // Если заблокирован — разблокируем (утверждаем)
         if ($userLE->approval == 2) {
             $userLE->approval = 1;
             if ($userLE->save(false)) {
@@ -118,7 +117,6 @@ class AdminUserController extends Controller
             return $this->redirect('/admin/admin-user');
         }
 
-        // Если ожидает подтверждения — утверждаем
         if ($userLE->approval == 0) {
             $userLE->approval = 1;
             if ($userLE->save(false)) {
@@ -129,7 +127,6 @@ class AdminUserController extends Controller
             return $this->redirect('/admin/admin-user');
         }
 
-        // Если подтверждён — блокируем
         if ($userLE->approval == 1) {
             $userLE->approval = 2;
 
@@ -139,10 +136,9 @@ class AdminUserController extends Controller
             }
 
             // Архивируем все товары продавца
-            $archivedStatusId = Status::getStatusId('arhived'); // псевдоним архива
+            $archivedStatusId = Status::getStatusId('arhived'); 
             $checkStatusId = Status::getStatusId('check');
 
-            // Берём все товары продавца, кроме уже архивированных
             $products = Product::find()
                 ->where(['user_id' => $user->id])
                 ->andWhere(['!=', 'status_id', $archivedStatusId])
@@ -161,14 +157,12 @@ class AdminUserController extends Controller
                 $deliveryStatusId = Status::getStatusId('in delivery');
                 $cancelStatusId = Status::getStatusId('canceled');
 
-                // Находим order_item с этими товарами
                 $affectedOrderIds = OrderItem::find()
                     ->select('order_id')
                     ->where(['product_id' => $productIds])
                     ->column();
 
                 if (!empty($affectedOrderIds)) {
-                    // Фильтруем только заказы со статусом «Новый» или «Передан в доставку»
                     $ordersToCancel = Order::find()
                         ->where(['id' => $affectedOrderIds])
                         ->andWhere(['status_id' => [$newStatusId, $deliveryStatusId]])

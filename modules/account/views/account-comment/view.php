@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
 
     <?php else: ?>
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-primary" role="alert">
             Вас еще нет оставляли комментариев
         </div>
     <?php endif ?>
