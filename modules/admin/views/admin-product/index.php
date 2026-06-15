@@ -27,12 +27,12 @@ $this->title = 'Работа с карточеками товаров';
 
     <?= ListView::widget([
         'dataProvider' => $dataProvider,
-        'layout' => "{summary}\n<div class=\"d-flex justify-content-around flex-wrap gap-2\">{items}</div>\n{pager}",
+        'layout' => "{summary}\n<div class=\"d-flex justify-content-around flex-wrap gap-2 align-items-stretch\">{items}</div>\n{pager}",
 
         'pager' => [
             'class' => LinkPager::class,
         ],
-        'itemOptions' => ['class' => 'item'],
+        'itemOptions' => ['class' => 'item d-flex'],
         'itemView' => 'item',
         'summary' => '',
     ]) ?>

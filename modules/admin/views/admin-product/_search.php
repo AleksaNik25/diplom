@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Category;
+use app\models\Status;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 
@@ -23,6 +24,13 @@ if ($model->category_id) {
     $found = Category::findOne($model->category_id);
     if ($found) $selectedLabel = $found->title;
 }
+
+// Статусы 1-3
+$statuses = Status::find()->where(['<=', 'id', 3])->orderBy('id')->all();
+$statusOptions = ['' => 'Все статусы'];
+foreach ($statuses as $s) {
+    $statusOptions[$s->id] = $s->title;
+}
 ?>
 
 <div class="product-search">
@@ -32,24 +40,24 @@ if ($model->category_id) {
         'method' => 'get',
         'options' => [
             'data-pjax' => 1,
-            'class'     => 'd-flex align-items-end gap-3',
-            'id'        => 'form-search',
+            'class' => 'd-flex align-items-end gap-3 flex-wrap',
+            'id' => 'form-search',
         ],
     ]); ?>
 
     <?= $form->field($model, 'title')->textInput(['placeholder' => 'Название'])->label('Название') ?>
 
-    <?= $form->field($model, 'status_id')->textInput(['placeholder' => 'Статус'])->label('Статус') ?>
+    <?= $form->field($model, 'status_id')->dropDownList($statusOptions, ['class' => 'form-select'])->label('Статус') ?>
 
-    <!-- Скрытый инпут category_id — заполняется JS -->
     <input type="hidden" name="AdminProductSearch[category_id]"
         id="search-category-id"
         value="<?= Html::encode($model->category_id) ?>">
 
     <!-- Кастомный дропдаун категорий -->
     <div class="mb-3 position-relative" id="category-dropdown-wrap">
+        <label class="form-label">Категория</label>
         <button type="button"
-            class=" border btn btn-light d-flex align-items-center gap-2"
+            class="border btn btn-light d-flex align-items-center gap-2"
             id="category-dropdown-btn"
             style="min-width: 240px; justify-content: space-between;">
             <span id="category-dropdown-label"><?= Html::encode($selectedLabel) ?></span>

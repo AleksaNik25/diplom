@@ -10,14 +10,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * AccountCommentController implements the CRUD actions for Comment model.
- */
 class AccountCommentController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -33,25 +27,10 @@ class AccountCommentController extends Controller
         );
     }
 
-    /**
-     * Lists all Comment models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Comment::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
         ]);
 
         return $this->render('index', [
@@ -59,17 +38,11 @@ class AccountCommentController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Comment model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView()
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Comment::find()
-                ->with(['product'])
+                ->with(['product', 'product.productImages'])
                 ->where(['user_id' => Yii::$app->user->id]),
             'sort' => [
                 'defaultOrder' => [
@@ -85,11 +58,6 @@ class AccountCommentController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Comment model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $model = new Comment();
@@ -116,7 +84,7 @@ class AccountCommentController extends Controller
         ])) {
             $model = new Comment();
             $model->product_id = $product_id;
-            $model->parent_id = $parent_id; 
+            $model->parent_id = $parent_id;
         }
 
         if (!$parent_id) {
@@ -161,34 +129,43 @@ class AccountCommentController extends Controller
         return $this->asJson(['text' => $model->text]);
     }
 
+    /**
+     * Редактирование комментария — работает и как AJAX (из «Мои отзывы»), и как обычный POST.
+     */
     public function actionEdit($id)
     {
-        if ($model = $this->findModel($id)) {
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post())) {
-                    $model->updated_at = date("Y-m-d H:i:s");
-                    if ($model->save()) {
-                        return $this->redirect("view");
-                    }
-                }
-            } else {
-                $model->loadDefaultValues();
-            }
+        $model = $this->findModel($id);
 
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        // Проверяем право на редактирование
+        if ($model->user_id !== Yii::$app->user->id) {
+            throw new \yii\web\ForbiddenHttpException('Нет доступа.');
         }
-        return $this->redirect(['view']);
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post())) {
+                $model->updated_at = date("Y-m-d H:i:s");
+                if ($model->save()) {
+                    if (Yii::$app->request->isAjax) {
+                        return $this->asJson(['success' => true]);
+                    }
+                    return $this->redirect(['view']);
+                }
+            }
+            if (Yii::$app->request->isAjax) {
+                return $this->asJson(['success' => false, 'errors' => $model->errors]);
+            }
+        }
+
+        // GET-запрос: возвращаем данные для модального окна
+        if (Yii::$app->request->isAjax) {
+            return $this->asJson(['text' => $model->text, 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
-    /**
-     * Deletes an existing Comment model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
@@ -210,13 +187,6 @@ class AccountCommentController extends Controller
         return $this->redirect(['/catalog/view', 'id' => $product_id]);
     }
 
-    /**
-     * Finds the Comment model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Comment the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = Comment::findOne(['id' => $id])) !== null) {

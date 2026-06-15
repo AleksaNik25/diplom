@@ -12,9 +12,10 @@ $this->title = 'Создание заказа';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
-        'basket' => $basket,
+        'model'             => $model,
+        'basket'            => $basket,
         'dataProviderItems' => $dataProviderItems,
-        'payType' => $payType,
+        'payType'           => $payType,
     ]) ?>
 
 </div>

@@ -27,8 +27,10 @@ $this->title = 'Каталог';
 
     <div class="d-flex align-items-end justify-content-end">
         <!-- <div class="mb-3">
-            <?php # $dataProvider->sort->link('price') ?> |
-            <?php # $dataProvider->sort->link('title') ?>
+            <?php # $dataProvider->sort->link('price') 
+            ?> |
+            <?php # $dataProvider->sort->link('title') 
+            ?>
 
         </div> -->
         <div>
@@ -38,12 +40,12 @@ $this->title = 'Каталог';
 
     <?= ListView::widget([
         'dataProvider' => $dataProvider,
-        'layout' => "{summary}\n<div class=\"d-flex justify-content-around flex-wrap gap-2\">{items}</div>\n{pager}",
+        'layout' => "{summary}\n<div class=\"d-flex justify-content-center flex-wrap gap-3 align-items-stretch\">{items}</div>\n{pager}",
         'summary' => '',
         'pager' => [
             'class' => LinkPager::class,
         ],
-        'itemOptions' => ['class' => 'item'],
+        'itemOptions' => ['class' => 'item d-flex'],
         'itemView' => 'item',
     ]) ?>
 

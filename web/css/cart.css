@@ -54,3 +54,12 @@
 	font-size: 50px;
 	color: #3A7F0C;
 }
+
+.bg-success {
+	background-color: #3A7F0C !important;
+}
+
+.border-info,
+.border-success {
+	border-color: rgba(186, 186, 186, 0.7) !important;
+}

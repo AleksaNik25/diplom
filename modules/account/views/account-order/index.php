@@ -53,7 +53,7 @@ $this->title = 'Личный кабинет';
         ]) ?>
 
     <?php else: ?>
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-primary" role="alert">
             У вас еще нет заказов
         </div>
     <?php endif ?>

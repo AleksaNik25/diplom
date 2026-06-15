@@ -1,3 +1,60 @@
+.vk-hero {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	min-height: 550px;
+	border-radius: 0px 0px 20px 20px;
+}
+
+.vk-hero-left {
+	padding: 56px 40px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	position: relative;
+	overflow: hidden;
+}
+
+.vk-hero-left h1 {
+	font-size: 60px;
+	font-weight: 800;
+	color: #1A3306;
+	margin: 0 0 14px;
+	line-height: 1.2;
+	position: relative;
+	z-index: 1;
+}
+
+.vk-hero-left p {
+	color: #2e570a;
+	font-size: 18px;
+	margin: 0 0 28px;
+	line-height: 1.7;
+	position: relative;
+	z-index: 1;
+}
+
+.vk-hero-btns {
+	display: flex;
+	gap: 12px;
+	position: relative;
+	z-index: 1;
+}
+
+.vk-hero-img {
+	height: 550px;
+	width: auto;
+}
+
+.vk-hero-sale {
+	height: 120px;
+	width: auto;
+	z-index: 7;
+	position: absolute;
+	top: 200px;
+	left: 800px;
+}
+
+
 .title-style {
 	font-weight: 800;
 	color: #1A3306;
@@ -38,6 +95,20 @@
 
 .vk-feat-card {
 	font-size: 14px;
+	color: #3A7F0C;
+	margin: 0;
+	line-height: 1.6;
+}
+
+.vk-feat-h {
+	font-size: 20px;
+	font-weight: 700;
+	color: #1A3306;
+	margin: 0 0 8px;
+}
+
+.vk-feat-p {
+	font-size: 16px;
 	color: #3A7F0C;
 	margin: 0;
 	line-height: 1.6;

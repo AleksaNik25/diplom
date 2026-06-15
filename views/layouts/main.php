@@ -46,7 +46,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <header id="header" class="mb-4">
         <?php
         NavBar::begin([
-            'brandLabel' => '<img class="logo" src="../web/img/logo.svg" alt="logo">',
+            'brandLabel' => '<img class="logo" src="/img/logo.svg" alt="logo">',
 
             'brandUrl' => Yii::$app->homeUrl,
             'options' => ['class' => 'navbar-expand-md navbar bg fixed-top']
@@ -89,7 +89,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 <?php
                 if (Yii::$app->user->identity?->isClient): ?>
                     <div class="d-flex">
-                        <?= Html::a('<i class="fas fa-shopping-basket text-dark"></i>', '/account/account-basket') ?>
+                        <?= Html::a('<i class="fas fa-shopping-basket text-dark" style="font-size: 20px;"></i>', '/account/account-basket') ?>
                         <div class="mx-2 text-dark">(<span id="basket-items-count"><?= Basket::getCount() ?></span>)
                         </div>
                     </div>
@@ -116,7 +116,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <div class="container py-4">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-4 mb-4">
                 <!-- <div>
-                    <img class="logo" src="../web/img/logo-footer.svg" alt="logo">
+                    <img class="logo" src="/img/logo-footer.svg" alt="logo">
                     <p class="d-flex flex-wrap">
                         Маркетплейс растений от проверенных продавцов. Найди своё идеальное растение и создай уголок природы дома.
                     </p>

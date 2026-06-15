@@ -14,7 +14,7 @@ $viewUrl = Url::to(['/catalog/view', 'id' => $model->product->id]);
 				<?= Yii::$app->formatter->asDatetime($model->created_at, "php:d.m.Y H:i:s") ?>
 			</span>
 			<?php if ($model->updated_at): ?>
-				<span class="text-nowrap  text-light small">
+				<span class="text-nowrap text-light small">
 					(изменен: <?= Yii::$app->formatter->asDatetime($model->updated_at, "php:d.m.Y H:i:s") ?>)
 				</span>
 			<?php endif ?>
@@ -40,9 +40,13 @@ $viewUrl = Url::to(['/catalog/view', 'id' => $model->product->id]);
 			<?php endif ?>
 		</div>
 
-
 		<div class="d-flex gap-3">
-			<?= Html::a('<i class="fas fa-pencil-alt"></i>', ['edit', "id" => $model->id], ["class" => " text-light",  "data-pjax" => 0]) ?>
+			<!-- Кнопка редактирования — открывает модальное окно на этой же странице -->
+			<a href="#"
+				class="text-light btn-comment-edit-review"
+				data-id="<?= $model->id ?>">
+				<i class="fas fa-pencil-alt"></i>
+			</a>
 			<?= Html::a('<i class="far fa-trash-alt"></i>', ['delete', 'id' => $model->id], [
 				"class" => " text-light",
 				'data' => [
@@ -92,6 +96,4 @@ $viewUrl = Url::to(['/catalog/view', 'id' => $model->product->id]);
 			<?= Html::a('Подробности о товаре', $viewUrl, ['class' => 'btn btn-primary', 'data-pjax' => 0]) ?>
 		</div>
 	</div>
-
-
 </div>

@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Category;
+use app\models\Status;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 
@@ -23,6 +24,12 @@ if ($model->category_id) {
     $found = Category::findOne($model->category_id);
     if ($found) $selectedLabel = $found->title;
 }
+
+$statuses = Status::find()->where(['<=', 'id', 3])->orderBy('id')->all();
+$statusOptions = ['' => 'Все статусы'];
+foreach ($statuses as $s) {
+    $statusOptions[$s->id] = $s->title;
+}
 ?>
 
 <div class="product-search">
@@ -32,15 +39,14 @@ if ($model->category_id) {
         'method' => 'get',
         'options' => [
             'data-pjax' => 1,
-            'class'     => 'd-flex align-items-end gap-3',
-            'id'        => 'form-search',
+            'class' => 'd-flex align-items-end gap-3',
+            'id' => 'form-search',
         ],
     ]); ?>
 
     <?= $form->field($model, 'title')->textInput(['placeholder' => 'Название'])->label('Название') ?>
 
-    <?php # $form->field($model, 'status_id')->textInput(['placeholder' => 'Статус'])->label('Статус') 
-    ?>
+    <?= $form->field($model, 'status_id')->dropDownList($statusOptions, ['class' => 'form-select'])->label('Статус') ?>
 
     <!-- Скрытый инпут category_id — заполняется JS -->
     <input type="hidden" name="SellerProductSearch[category_id]"

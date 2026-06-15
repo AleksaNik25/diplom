@@ -8,14 +8,8 @@ use app\models\Order;
 use app\models\Status;
 use yii\db\Expression;
 
-/**
- * AdminOrderSearch represents the model behind the search form of `app\models\Order`.
- */
 class AdminOrderSearch extends Order
 {
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -25,22 +19,11 @@ class AdminOrderSearch extends Order
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
         $query = Order::find()->with('user');
@@ -50,6 +33,15 @@ class AdminOrderSearch extends Order
             'pagination' => [
                 'pageSize' => 5
             ],
+            'sort' => [
+                'defaultOrder' => ['created_at' => SORT_DESC],
+                'attributes' => [
+                    'id',
+                    'created_at',
+                    'sum',
+                    'status_id',
+                ],
+            ],
         ]);
 
         $this->load($params);
@@ -57,34 +49,38 @@ class AdminOrderSearch extends Order
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'created_at' => $this->created_at,
-            'amount' => $this->amount,
-            'sum' => $this->sum,
-            'status_id' => $this->status_id,
-        ]);
+        // Фильтр по дате: поддержка частичного совпадения (LIKE)
+        $query->andFilterWhere(['id' => $this->id]);
+        $query->andFilterWhere(['user_id' => $this->user_id]);
+        $query->andFilterWhere(['amount' => $this->amount]);
+        $query->andFilterWhere(['sum' => $this->sum]);
+        $query->andFilterWhere(['status_id' => $this->status_id]);
 
-        $statusesAlias = Status::getStatusesAlias();
-        $newStatusId = $statusesAlias['new'] ?? null;
-        $inDeliveryStatusId = $statusesAlias['in delivery'] ?? null;
-
-        $caseParts = [];
-        if ($newStatusId !== null) {
-            $caseParts[] = "WHEN status_id = $newStatusId THEN 1";
+        if ($this->created_at) {
+            $query->andFilterWhere(['like', 'created_at', $this->created_at]);
         }
-        if ($inDeliveryStatusId !== null) {
-            $caseParts[] = "WHEN status_id = $inDeliveryStatusId THEN 2";
+
+        // Если сортировка не задана пользователем — сортируем по статусу+дате
+        if (empty($params['sort'])) {
+            $statusesAlias = Status::getStatusesAlias();
+            $newStatusId = $statusesAlias['new'] ?? null;
+            $inDeliveryStatusId = $statusesAlias['in delivery'] ?? null;
+
+            $caseParts = [];
+            if ($newStatusId !== null) {
+                $caseParts[] = "WHEN status_id = $newStatusId THEN 1";
+            }
+            if ($inDeliveryStatusId !== null) {
+                $caseParts[] = "WHEN status_id = $inDeliveryStatusId THEN 2";
+            }
+            $caseParts[] = "ELSE 3";
+
+            $caseExpression = "CASE " . implode(" ", $caseParts) . " END";
+            $query->orderBy([
+                new Expression($caseExpression),
+                'created_at' => SORT_DESC,
+            ]);
         }
-        $caseParts[] = "ELSE 3";
-
-        $caseExpression = "CASE " . implode(" ", $caseParts) . " END";
-
-        $query->orderBy([
-            new Expression($caseExpression),
-            'created_at' => SORT_DESC,
-        ]);
 
         return $dataProvider;
     }

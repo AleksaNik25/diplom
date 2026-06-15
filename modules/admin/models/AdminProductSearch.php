@@ -6,18 +6,15 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Product;
 
-/**
- * AdminProductSearch represents the model behind the search form of `app\models\Product`.
- */
 class AdminProductSearch extends Product
 {
-    public $category_id; 
+    public $category_id;
 
     public function rules()
     {
         return [
             [['id', 'user_id', 'status_id'], 'integer'],
-            [['category_id'], 'integer'], 
+            [['category_id'], 'integer'],
             [['title', 'preview', 'care_recommendations', 'price'], 'safe'],
         ];
     }
@@ -40,14 +37,10 @@ class AdminProductSearch extends Product
             return $dataProvider;
         }
 
-        $query->joinWith(['categories' => function ($q) {
-            $q->onCondition(['category.id' => $this->category_id]);
-        }], false);
-
         $query->andFilterWhere([
             'product.id' => $this->id,
             'product.user_id' => $this->user_id,
-            'product.status_id' => $this->status_id,
+            'product.status_id'=> $this->status_id,
         ]);
 
         $query->andFilterWhere(['like', 'product.title', $this->title])

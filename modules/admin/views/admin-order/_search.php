@@ -20,19 +20,13 @@ use yii\bootstrap5\ActiveForm;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
+    <?= $form->field($model, 'id')->label('№ заказа') ?>
 
-    <?php // echo $form->field($model, 'user_id') 
-    ?>
-
-    <?= $form->field($model, 'created_at') ?>
-
-    <?php // echo $form->field($model, 'status_id') 
-    ?>
+    <?= $form->field($model, 'created_at')->label('Дата') ?>
 
     <div class="form-group d-flex gap-2">
         <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('<i class="fas fa-redo-alt"></i>', 'index', ['class' => 'btn btn-outline-primary']) ?>
+        <?= Html::a('<i class="fas fa-redo-alt"></i>', ['index'], ['class' => 'btn btn-outline-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

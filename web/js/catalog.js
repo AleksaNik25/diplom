@@ -64,8 +64,8 @@ $(() => {
     $('#category-popup').hide()
     $('#category-chevron').removeClass('fa-chevron-up').addClass('fa-chevron-down')
 
-    // Сабмит формы
-    $('#form-search').submit()
+    // Сабмит формы через jQuery-событие, чтобы pjax перехватил
+    $('#form-search').trigger('submit')
   })
 
   // Подсветка при наведении
@@ -75,4 +75,4 @@ $(() => {
     $(this).removeClass('bg-white')
   })
 
-});
+})

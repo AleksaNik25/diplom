@@ -7,6 +7,12 @@ use yii\bootstrap5\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\modules\account\models\AccountOrderSearch $model */
 /** @var yii\widgets\ActiveForm $form */
+
+$statuses = Status::find()->where(['between', 'id', 6, 9])->orderBy('id')->all();
+$statusOptions = ['' => 'Все статусы'];
+foreach ($statuses as $s) {
+    $statusOptions[$s->id] = $s->title;
+}
 ?>
 
 <div class="order-search">
@@ -23,10 +29,7 @@ use yii\bootstrap5\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'status_id') ?>
-
-    <?php # $form->field($model, 'status_id')->dropDownList(Status::getStatuses([3, 4, 5, 6]), ['prompt' => "Укажите статус"]) 
-    ?>
+    <?= $form->field($model, 'status_id')->dropDownList($statusOptions, ['class' => 'form-select'])->label('Статус') ?>
 
     <div class="form-group d-flex gap-2">
         <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-primary']) ?>

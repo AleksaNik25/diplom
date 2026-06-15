@@ -9,7 +9,6 @@ $(() => {
       method: "POST",
       success(data) {
         if (data) {
-          // Обновляем счетчик корзины в шапке сайта
           $.ajax({
             url: "/account/account-basket/get-count",
             method: "POST",
@@ -17,14 +16,13 @@ $(() => {
               $("#basket-items-count").html(value)
             },
           })
-          // Автообновление (перезагрузка) PJAX контейнера избранного
           $.pjax.reload("#favourite-pjax")
         }
       },
     })
   })
 
-  // 2. Обработчик иконки избранного внутри PJAX
+  // 2. Обработчик иконки избранного внутри PJAX (страница избранного)
   $("#favourite-pjax").on("click", "i.icon-favourite", function () {
     $.ajax({
       url: $(this).data("url"),
@@ -37,9 +35,12 @@ $(() => {
     })
   })
 
-  // 3. Обработчик иконки избранного вне PJAX (на странице товара)
-  $(document).on("click", "i.icon-favourite", function () {
+  // 3. Обработчик иконки избранного вне PJAX (страница товара, главная страница, каталог)
+  $(document).on("click", "i.icon-favourite", function (e) {
+    // Не обрабатываем клики внутри PJAX-контейнера избранного (там свой обработчик)
     if ($(this).closest("#favourite-pjax").length) return
+
+    e.preventDefault()
     const icon = $(this)
     const isActive = icon.hasClass("text-danger")
 
@@ -50,11 +51,15 @@ $(() => {
         if (!data.success) return
 
         if (isActive) {
-          icon.removeClass("text-danger").addClass("text-secondary")
-          icon.data("url", `/account/account-favorits/add?product_id=${data.product_id}`)
+          // Убираем из избранного
+          icon.removeClass("text-danger").addClass("text-white")
+          icon.data("url", "/account/account-favorits/add?product_id=" + data.product_id)
+          icon.attr("data-url", "/account/account-favorits/add?product_id=" + data.product_id)
         } else {
-          icon.removeClass("text-secondary").addClass("text-danger")
-          icon.data("url", `/account/account-favorits/remove?id=${data.favorit_id}`)
+          // Добавляем в избранное
+          icon.removeClass("text-white text-secondary").addClass("text-danger")
+          icon.data("url", "/account/account-favorits/remove?id=" + data.favorit_id)
+          icon.attr("data-url", "/account/account-favorits/remove?id=" + data.favorit_id)
         }
       },
     })
