@@ -48,9 +48,6 @@ if (!$model->time) $model->time = '10:00';
 
             <?= $form->field($model, 'time')->textInput([
                 'type' => 'time',
-                'min'  => '10:00',
-                'max'  => '20:30',
-                'step' => '900',
             ]) ?>
         </div>
 
@@ -67,10 +64,10 @@ if (!$model->time) $model->time = '10:00';
 <div>
     <?= ListView::widget([
         'dataProvider' => $dataProviderItems,
-        'itemOptions'  => ['class' => 'item'],
-        'itemView'     => 'item-order',
-        'pager'        => ['class' => LinkPager::class],
-        'summary'      => '',
+        'itemOptions' => ['class' => 'item'],
+        'itemView' => 'item-order',
+        'pager' => ['class' => LinkPager::class],
+        'summary' => '',
     ]) ?>
 
     <div class="border-white border-top border-2 py-3 order-total fw-bold fs-3">

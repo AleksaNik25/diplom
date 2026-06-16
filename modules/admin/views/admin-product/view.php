@@ -27,12 +27,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('<i class="fas fa-arrow-left"></i>', ['index', 'id' => $model->id], ['class' => 'btn btn-outline-primary']) ?>
 
         <?= $model->status->alias == 'check'
-            ? Html::a('Опубликовать', ['change-status', 'id' => $model->id, 'status' => 'on sale'], ['class' => 'btn btn-outline-success'])
+            ? Html::a('Опубликовать', ['change-status', 'id' => $model->id, 'status' => 'on sale'], ['class' => 'btn btn-success'])
             : ''
         ?>
 
         <?= $model->status->alias !== 'arhived'
-            ? Html::a('В архив', ['change-status', 'id' => $model->id, 'status' => 'arhived'], ['class' => 'btn btn-outline-warning'])
+            ? Html::a('В архив', ['change-status', 'id' => $model->id, 'status' => 'arhived'], ['class' => 'btn btn-success'])
             : ''
         ?>
     </p>
@@ -136,7 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ]) ?>
         <?php else: ?>
-            <div class="alert alert-info" role="alert">
+            <div class="alert alert-primary" role="alert">
                 У этого товара еще нет отзывов.
             </div>
         <?php endif ?>

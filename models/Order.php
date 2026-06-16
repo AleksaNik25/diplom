@@ -48,11 +48,7 @@ class Order extends \yii\db\ActiveRecord
                 return;
             }
 
-            $currentTime = strtotime($timeString);
-            $minTime = strtotime('10:00');
-            $maxTime = strtotime('20:30');
-
-            if ($currentTime < $minTime || $currentTime > $maxTime) {
+            if ($timeString < '10:00' || $timeString > '20:30') {
                 $this->addError($attribute, 'Время доставки должно быть в диапазоне с 10:00 до 20:30.');
             }
         }
@@ -61,17 +57,17 @@ class Order extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'=> '№ заказа',
-            'user_id'=> 'ID покупателя',
-            'created_at' => 'Дата и время создания',
-            'amount'=> 'Количество товаров',
-            'sum'=> 'Итоговая сумма заказа',
-            'status_id'=> 'Статус',
+            'id'          => '№ заказа',
+            'user_id'     => 'ID покупателя',
+            'created_at'  => 'Дата и время создания',
+            'amount'      => 'Количество товаров',
+            'sum'         => 'Итоговая сумма заказа',
+            'status_id'   => 'Статус',
             'pay_type_id' => 'Способ оплаты',
-            'address'=> 'Адрес доставки',
-            'phone'=> 'Телефон получателя',
-            'date'=> 'Желаемая дата доставки',
-            'time'=> 'Желаемое время доставки',
+            'address'     => 'Адрес доставки',
+            'phone'       => 'Телефон получателя',
+            'date'        => 'Желаемая дата доставки',
+            'time'        => 'Желаемое время доставки',
         ];
     }
 
@@ -100,34 +96,31 @@ class Order extends \yii\db\ActiveRecord
         $basket = Basket::findOne($basket_id);
         try {
             $order = new static();
-            $order->user_id = Yii::$app->user->id;
-            $order->amount = $basket->amount;
-            $order->sum = $basket->sum;
-            $order->status_id = Status::getStatusId('new');
+            $order->user_id     = Yii::$app->user->id;
+            $order->amount      = $basket->amount;
+            $order->sum         = $basket->sum;
+            $order->status_id   = Status::getStatusId('new');
             $order->pay_type_id = $pay_type_id;
-            $order->address = $address;
-            $order->phone = $phone;
-            $order->date = $date;
-            $order->time = $time;
+            $order->address     = $address;
+            $order->phone       = $phone;
+            $order->date        = $date;
+            $order->time        = $time;
 
-            if ($order->save()) {
+            // save(false) — пропускаем валидацию, она уже прошла в контроллере
+            if ($order->save(false)) {
                 if ($basketItems = BasketItem::find()->where(['basket_id' => $basket_id])->all()) {
                     foreach ($basketItems as $item) {
                         $orderItem = new OrderItem();
                         $orderItem->order_id = $order->id;
                         $orderItem->load($item->attributes, '');
-                        $orderItem->save();
+                        $orderItem->save(false);
                     }
                     $basket->delete();
                     return $order->id;
                 }
-            } else {
-                var_dump($order->errors);
-                die;
             }
         } catch (Exception $e) {
-            var_dump($e->getMessage());
-            die;
+            Yii::error($e->getMessage());
         }
         return false;
     }
